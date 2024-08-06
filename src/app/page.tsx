@@ -1,9 +1,3 @@
-import dynamic from "next/dynamic";
+const Home: React.FC = () => <div></div>;
 
-const CustomEditor = dynamic(() => import("@/components/editor"), {
-  ssr: false,
-});
-
-export default function Home() {
-  return <CustomEditor />;
-}
+export default Home;

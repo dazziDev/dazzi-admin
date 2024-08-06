@@ -72,7 +72,7 @@ import "ckeditor5/ckeditor5.css";
 import translations from "ckeditor5/translations/ko.js";
 import { useEffect, useRef, useState } from "react";
 
-function CustomEditor() {
+const CustomEditor = () => {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -443,6 +443,6 @@ function CustomEditor() {
       </div>
     </div>
   );
-}
+};
 
 export default CustomEditor;

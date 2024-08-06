@@ -1,3 +1,6 @@
+import FooterBar from "@/components/ui/footerBar";
+import Header from "@/components/ui/header";
+import Sidebar from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -11,12 +14,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} min-h-screen bg-gray-100`}>
+        <div className="flex">
+          <Sidebar />
+          <div className="flex-1 flex flex-col">
+            <Header />
+            <main className="flex-1 p-4 ml-16">{children}</main>
+            <FooterBar />
+          </div>
+        </div>
+      </body>
     </html>
   );
 }
