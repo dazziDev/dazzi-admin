@@ -67,29 +67,22 @@ import {
   Undo,
 } from "ckeditor5";
 
+import { useEditorStore } from "@/store/editorStore";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "ckeditor5/ckeditor5.css";
 import translations from "ckeditor5/translations/ko.js";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
-const CustomEditor = () => {
+const CustomEditor: React.FC = () => {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
-  const [isLayoutReady, setIsLayoutReady] = useState(false);
+  const setEditorData = useEditorStore((state) => state.setEditorData);
 
-  useEffect(() => {
-    setIsLayoutReady(true);
-
-    return () => setIsLayoutReady(false);
-  }, []);
-
-  function handleEditorEvent(event: any, editor: any) {
-    if (!event || !event.target) {
-      console.warn("Event or target is undefined.");
-      return;
-    }
-    console.log("Handling editor event:", event);
-  }
+  const handleEditorChange = (event: any, editor: any) => {
+    const data = editor.getData();
+    setEditorData(data); // Update Zustand state
+    console.log("data", data);
+  };
 
   const editorConfig: EditorConfig = {
     toolbar: {
@@ -430,13 +423,11 @@ const CustomEditor = () => {
         >
           <div className="editor-container__editor">
             <div ref={editorRef}>
-              {isLayoutReady && (
-                <CKEditor
-                  editor={ClassicEditor}
-                  config={editorConfig}
-                  onChange={handleEditorEvent}
-                />
-              )}
+              <CKEditor
+                editor={ClassicEditor}
+                config={editorConfig}
+                onChange={handleEditorChange}
+              />
             </div>
           </div>
         </div>
