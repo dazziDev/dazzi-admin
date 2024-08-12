@@ -25,7 +25,9 @@ export default function RootLayout({
           <div className="flex-1 flex flex-col">
             <Header />
             <main className="flex-1 p-4 ml-16">{children}</main>
-            <FooterBar />
+            <div className="pt-8">
+              <FooterBar />
+            </div>
           </div>
         </div>
       </body>

@@ -71,17 +71,29 @@ import { useEditorStore } from "@/store/editorStore";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "ckeditor5/ckeditor5.css";
 import translations from "ckeditor5/translations/ko.js";
-import { useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { Button } from "../ui/button";
 
 const CustomEditor: React.FC = () => {
-  const editorContainerRef = useRef(null);
-  const editorRef = useRef(null);
-  const setEditorData = useEditorStore((state) => state.setEditorData);
-
+  const editorRef = useRef<ClassicEditor | null>(null);
+  const { editorData, setEditorData } = useEditorStore();
+  const router = useRouter();
   const handleEditorChange = (event: any, editor: any) => {
     const data = editor.getData();
-    setEditorData(data); // Update Zustand state
+    setEditorData(data);
     console.log("data", data);
+  };
+
+  useEffect(() => {
+    if (editorRef.current && editorData) {
+      editorRef.current.setData(editorData);
+    }
+  }, [editorData]);
+
+  const handleSubmit = () => {
+    const uniqueId = Date.now().toString();
+    router.push(`/preview/${uniqueId}`);
   };
 
   const editorConfig: EditorConfig = {
@@ -237,9 +249,6 @@ const CustomEditor: React.FC = () => {
         "Verdana, sans-serif",
       ],
     },
-    // FontFamilyEditing: {
-    //   supportAllValues: true,
-    // },
     fontSize: {
       options: [
         10,
@@ -414,23 +423,26 @@ const CustomEditor: React.FC = () => {
     },
     translations: [translations],
   };
+
   return (
-    <div>
+    <div className="relative pb-16">
       <div className="main-container">
-        <div
-          className="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar"
-          ref={editorContainerRef}
-        >
+        <div className="editor-container pb-1 editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar">
           <div className="editor-container__editor">
-            <div ref={editorRef}>
-              <CKEditor
-                editor={ClassicEditor}
-                config={editorConfig}
-                onChange={handleEditorChange}
-              />
-            </div>
+            <CKEditor
+              editor={ClassicEditor}
+              config={editorConfig}
+              data={editorData}
+              onChange={handleEditorChange}
+            />
           </div>
         </div>
+        <Button
+          className="absolute right-0 bottom-0 m-4"
+          onClick={handleSubmit}
+        >
+          확인
+        </Button>
       </div>
     </div>
   );
