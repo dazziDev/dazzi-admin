@@ -58,6 +58,10 @@
     --chart-5: 340 75% 55%;
   }
 }
+/* editor min-height */
+.ck-editor__editable_inline {
+  min-height: 500px;
+}
 
 @layer base {
   * {
@@ -66,14 +70,11 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-@layer base {
   @font-face {
-    font-weight: normal;
     font-style: normal;
   }
 }
+
 @font-face {
   font-family: "온글잎 언즈체";
   src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/Ownglyph_UNZ-Rg.woff2")
@@ -109,7 +110,162 @@
   src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2")
     format("woff2");
 }
-/* editor min-height */
-.ck-editor__editable_inline {
-  min-height: 500px;
+/* eeeee */
+
+@font-face {
+  font-family: "둥근모꼴+ Fixedsys";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff")
+    format("woff");
+}
+
+@font-face {
+  font-family: "서울한강체";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SeoulHangangM.woff")
+    format("woff");
+}
+
+@font-face {
+  font-family: "을유1945";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/Eulyoo1945-Regular.woff")
+    format("woff");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "을유1945";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/Eulyoo1945-Regular.woff")
+    format("woff");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "리디바탕";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff")
+    format("woff");
+}
+
+@font-face {
+  font-family: "마포꽃섬";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoFlowerIslandA.woff")
+    format("woff");
+}
+
+@font-face {
+  font-family: "세종학당";
+  src: url("https://cdn.jsdelivr.net/gh/fontbee/font@main/Ksif/KingSejongInstitute-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "세종학당";
+  src: url("https://cdn.jsdelivr.net/gh/fontbee/font@main/Ksif/KingSejongInstitute-Bold.woff2")
+    format("woff2");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-Thin.woff2") format("woff2");
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-ExtraLight.woff2") format("woff2");
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-Light.woff2") format("woff2");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "프리텐다드";
+  src: url("/fonts/pretendard/Pretendard-Black.woff2") format("woff2");
+  font-weight: 900;
+}
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream1.woff2") format("woff2");
+  font-weight: 100; /* Thin */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream2.woff2") format("woff2");
+  font-weight: 200; /* Extra Light */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream3.woff2") format("woff2");
+  font-weight: 300; /* Light */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream4.woff2") format("woff2");
+  font-weight: 400; /* Regular */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream5.woff2") format("woff2");
+  font-weight: 500; /* Medium */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream6.woff2") format("woff2");
+  font-weight: 600; /* Semi Bold */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream7.woff2") format("woff2");
+  font-weight: 700; /* Bold */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream8.woff2") format("woff2");
+  font-weight: 800; /* Extra Bold */
+}
+
+@font-face {
+  font-family: "에스코어드림";
+  src: url("/fonts/scdream/SCDream9.woff2") format("woff2");
+  font-weight: 900; /* Black */
 }
