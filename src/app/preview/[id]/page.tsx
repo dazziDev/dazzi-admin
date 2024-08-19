@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useEditorStore } from "@/store/editorStore";
+import "ckeditor5/ckeditor5.css";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -17,7 +18,7 @@ const PreviewPage: React.FC = () => {
   const toggleViewMode = () => {
     setIsMobileView(!isMobileView);
   };
-
+  console.log("editorData222", editorData);
   return (
     <div className="relative pb-20">
       <div className="flex justify-end space-x-2">
@@ -35,13 +36,19 @@ const PreviewPage: React.FC = () => {
           <div className="relative w-[375px] h-[812px] bg-black rounded-[40px] overflow-hidden shadow-lg border-8 border-black">
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[210px] h-[30px] bg-black rounded-b-[15px]"></div>
             <div className="absolute top-[40px] bottom-[40px] left-0 right-0 bg-white overflow-y-auto p-4">
-              <div dangerouslySetInnerHTML={{ __html: editorData }} />
+              <div
+                className="ck-content"
+                dangerouslySetInnerHTML={{ __html: editorData }}
+              />
             </div>
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[130px] h-[5px] bg-gray-400 rounded-full"></div>
           </div>
         </div>
       ) : (
-        <div dangerouslySetInnerHTML={{ __html: editorData }} />
+        <div
+          className="ck-content"
+          dangerouslySetInnerHTML={{ __html: editorData }}
+        />
       )}
     </div>
   );

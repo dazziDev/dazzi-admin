@@ -15,6 +15,11 @@ const CustomEditor: React.FC = () => {
   const router = useRouter();
   const handleEditorChange = (event: any, editor: any) => {
     const data = editor.getData();
+    // data = data.replace(
+    //   /<figure class="image">/g,
+    //   '<figure class="image ck-widget ck-widget_with-resizer" contenteditable="false">'
+    // );
+
     setEditorData(data);
     console.log("data", data);
   };

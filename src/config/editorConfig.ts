@@ -256,17 +256,55 @@ export const editorConfig: EditorConfig = {
   },
   image: {
     toolbar: [
-      "toggleImageCaption",
       "imageTextAlternative",
       "|",
-      "imageStyle:inline",
-      "imageStyle:wrapText",
-      "imageStyle:breakText",
-      "imageStyle:block",
-      "imageStyle:side",
+      "imageStyle:alignLeft",
+      "imageStyle:full",
+      "imageStyle:alignRight",
       "|",
-      "resizeImage",
+      "resizeImage:original",
     ],
+    styles: {
+      options: [
+        "inline",
+        "alignLeft",
+        "alignRight",
+        "alignCenter",
+        "alignBlockLeft",
+        "alignBlockRight",
+        "block",
+        "side",
+      ],
+    },
+    resizeOptions: [
+      {
+        name: "resizeImage:original",
+        value: null,
+        label: "Original",
+        icon: "original",
+      },
+      {
+        name: "resizeImage:50",
+        value: "50",
+        label: "50%",
+        icon: "medium",
+      },
+      {
+        name: "resizeImage:75",
+        value: "75",
+        label: "75%",
+        icon: "large",
+      },
+      {
+        name: "resizeImage:25",
+        value: "25",
+        label: "25%",
+        icon: "small",
+      },
+    ],
+    upload: {
+      types: ["jpeg", "png", "gif", "bmp", "webp", "tiff"],
+    },
   },
   simpleUpload: {
     uploadUrl: "data:image/png;base64,",
