@@ -20,7 +20,7 @@ const PreviewPage: React.FC = () => {
   };
   console.log("editorData222", editorData);
   return (
-    <div className="relative pb-20">
+    <div className="relative pb-20 max-w-5xl mx-auto bg-white p-4">
       <div className="flex justify-end space-x-2">
         <Button onClick={toggleViewMode}>
           {!isMobileView ? "PC" : "Mobile"}

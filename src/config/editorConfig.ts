@@ -84,7 +84,7 @@ export const editorConfig: EditorConfig = {
       "numberedList",
       "|",
       "imageUpload",
-      "htmlEmbed",
+      // "htmlEmbed",
       "|",
       "findAndReplace",
       "selectAll",
