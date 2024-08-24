@@ -1,0 +1,28 @@
+/* editor min-height */
+.ck-editor__editable_inline {
+  min-height: 500px;
+}
+.ck-content h1 {
+  font-size: 2em !important;
+  font-weight: bold !important;
+}
+.ck-content h2 {
+  font-size: 1.75em !important;
+  font-weight: bold !important;
+}
+.ck-content h3 {
+  font-size: 1.5em !important;
+  font-weight: bold !important;
+}
+.ck-content h4 {
+  font-size: 1.25em !important;
+  font-weight: bold !important;
+}
+.ck-content h5 {
+  font-size: 1em !important;
+  font-weight: bold !important;
+}
+.ck-content h6 {
+  font-size: 0.75em !important;
+  font-weight: bold !important;
+}
