@@ -23,6 +23,7 @@
     "shadcn-ui": "^0.8.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "victory": "^37.1.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

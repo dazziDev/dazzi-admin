@@ -1,8 +1,9 @@
-const Dashboard: React.FC = () => (
-  <div>
-    <h1>Dashboard</h1>
-    <p>Welcome to the dashboard!</p>
-  </div>
-);
+"use client";
+import Dashboard from "@/components/dashboard/dashboard";
+import React from "react";
 
-export default Dashboard;
+const DashboardPage: React.FC = () => {
+  return <Dashboard />;
+};
+
+export default DashboardPage;
