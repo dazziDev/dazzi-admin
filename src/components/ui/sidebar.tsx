@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, Home } from "lucide-react";
+import { Edit, Eye, Home, UserCogIcon } from "lucide-react";
 import Link from "next/link";
 
 const Sidebar: React.FC = () => (
@@ -24,6 +24,12 @@ const Sidebar: React.FC = () => (
     <Link href="/preview">
       <Button variant="ghost" className="flex flex-col items-center space-y-2">
         <Eye />
+      </Button>
+    </Link>
+
+    <Link href="/profile">
+      <Button variant="ghost" className="flex flex-col items-center space-y-2">
+        <UserCogIcon />
       </Button>
     </Link>
   </div>

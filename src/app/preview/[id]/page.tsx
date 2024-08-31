@@ -23,7 +23,7 @@ const PreviewPage: React.FC = () => {
     <div className="relative pb-20 max-w-5xl mx-auto bg-white p-4">
       <div className="flex justify-end space-x-2">
         <Button onClick={toggleViewMode}>
-          {!isMobileView ? "PC" : "Mobile"}
+          {!isMobileView ? "Mobile" : "PC"}
         </Button>
         <Button onClick={handleEdit}>수정하기</Button>
       </div>
@@ -31,7 +31,7 @@ const PreviewPage: React.FC = () => {
       <h1 className="pb-10 text-2xl font-bold">Preview</h1>
       <div className="border-b-2 border-gray-200 mb-4"></div>
 
-      {isMobileView ? (
+      {!isMobileView ? (
         <div className="flex justify-center">
           <div className="relative w-[375px] h-[812px] bg-black rounded-[40px] overflow-hidden shadow-lg border-8 border-black">
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[210px] h-[30px] bg-black rounded-b-[15px]"></div>
