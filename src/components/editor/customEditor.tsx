@@ -1,7 +1,9 @@
 "use client";
 import { ClassicEditor } from "ckeditor5";
 
+import { saveEditorContent } from "@/app/api/ediotr";
 import { editorConfig } from "@/config/editorConfig";
+import { processEditorContent } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "ckeditor5/ckeditor5.css";
@@ -52,9 +54,37 @@ const CustomEditor: React.FC = () => {
     }
   }, [editorData]);
 
-  const handleSubmit = () => {
-    const uniqueId = Date.now().toString();
-    router.push(`/preview/${uniqueId}`);
+  // const handleSubmit = () => {
+  //   const uniqueId = Date.now().toString();
+  //   router.push(`/preview/${uniqueId}`);
+  // };
+  const handleSubmit = async () => {
+    try {
+      // 1. 에디터 콘텐츠 가져오기
+      const content: string = editorData;
+
+      // 2. 콘텐츠에서 이미지 처리 (유틸리티 함수 사용)
+      const { modifiedContent, imageFiles } = await processEditorContent(
+        content
+      );
+
+      // 3. FormData 생성 및 데이터 추가
+      const formData = new FormData();
+      formData.append("content", modifiedContent);
+      imageFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      // 4. 백엔드로 데이터 전송 (API 함수 사용)
+      await saveEditorContent(formData);
+      console.log("formData", formData);
+      // 성공 시 페이지 이동 또는 알림 표시
+      const uniqueId = Date.now().toString();
+      router.push(`/preview/${uniqueId}`);
+    } catch (error) {
+      console.error("Failed to save content:", error);
+      // 에러 처리 로직 추가 (예: 알림 표시)
+    }
   };
 
   return (
