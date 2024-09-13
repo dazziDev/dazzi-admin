@@ -4,6 +4,7 @@ export interface Author {
   id: number;
   name: string;
   src: string;
+  rectSrc: string;
   introduction: string;
 }
 
@@ -30,6 +31,7 @@ export const initialAuthors: Author[] = [
     id: 1,
     name: "이현우",
     src: "/admin/ParkJunghoon.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
@@ -37,6 +39,7 @@ export const initialAuthors: Author[] = [
     id: 2,
     name: "황용하",
     src: "/admin/ParkJunghoon.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
@@ -44,6 +47,7 @@ export const initialAuthors: Author[] = [
     id: 3,
     name: "이학찬",
     src: "/admin/ParkJunghoon.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
@@ -51,6 +55,7 @@ export const initialAuthors: Author[] = [
     id: 4,
     name: "박동민",
     src: "/admin/ParkDongmin.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
@@ -58,6 +63,7 @@ export const initialAuthors: Author[] = [
     id: 5,
     name: "정현탁",
     src: "/admin/ParkJunghoon.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
@@ -65,6 +71,7 @@ export const initialAuthors: Author[] = [
     id: 6,
     name: "장태호",
     src: "/admin/ParkJunghoon.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
@@ -72,6 +79,7 @@ export const initialAuthors: Author[] = [
     id: 7,
     name: "박형일",
     src: "/admin/ParkJunghoon.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
@@ -79,6 +87,7 @@ export const initialAuthors: Author[] = [
     id: 8,
     name: "박정훈",
     src: "/admin/ParkJunghoon.webp",
+    rectSrc: "/admin/ParkJunghoon.webp",
     introduction:
       "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
   },
