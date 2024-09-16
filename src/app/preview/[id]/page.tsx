@@ -5,7 +5,7 @@ import "ckeditor5/ckeditor5.css";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-const PreviewPage: React.FC = () => {
+const PreviewPage = () => {
   const { editorData } = useEditorStore();
   const router = useRouter();
   const uid = useParams().id;

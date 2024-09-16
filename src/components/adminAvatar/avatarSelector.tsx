@@ -1,39 +1,51 @@
-import { initialAuthors, useEditorStore } from "@/store/editorStore";
+import axiosInstance from "@/app/api/axiosInstance";
+import { Author, initialAuthors } from "@/store/authorStore";
+import { useEditorStore } from "@/store/editorStore";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const AvatarSelector = () => {
-  const { setSelectedAuthor } = useEditorStore();
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const { selectedAuthor, setSelectedAuthor } = useEditorStore();
+  // 삭제예정 위의것 사용
+  const [authors, setAuthors] = useState<Author[]>(initialAuthors);
 
-  const handleAvatarClick = (name: string) => {
-    const selectedAvatar = initialAuthors.find(
-      (avatar) => avatar.name === name
-    );
-    if (selectedAvatar) {
-      setSelectedName(name);
-      setSelectedAuthor(selectedAvatar);
-    }
+  useEffect(() => {
+    // 에디터 리스트 가져와서 사용
+    const fetchAuthors = async () => {
+      try {
+        const response = await axiosInstance.get("/authors/list");
+        const authorsData: Author[] = response.data;
+        setAuthors(authorsData);
+      } catch (error) {
+        console.error("Failed to fetch authors:", error);
+      }
+    };
+
+    fetchAuthors();
+  }, []);
+
+  const handleAvatarClick = (author: Author) => {
+    setSelectedAuthor(author);
   };
 
   return (
     <div className="flex justify-center space-x-4 mt-4 mb-4">
-      {initialAuthors.map((avatar) => (
+      {authors.map((author) => (
         <div
-          key={avatar.name}
+          key={author.id}
           className={`group cursor-pointer text-center transition-transform duration-300 ${
-            selectedName === avatar.name ? "scale-110" : "opacity-50"
+            selectedAuthor?.id === author.id ? "scale-110" : "opacity-50"
           }`}
-          onClick={() => handleAvatarClick(avatar.name)}
+          onClick={() => handleAvatarClick(author)}
         >
           <div className="relative">
             <Image
-              src={avatar.src}
-              alt={avatar.name}
+              src={author.src}
+              alt={author.name}
               width={60}
               height={60}
               className={`rounded-full shadow-md transition-all duration-300 ${
-                selectedName === avatar.name
+                selectedAuthor?.id === author.id
                   ? "ring-4 ring-blue-500 opacity-100"
                   : "group-hover:opacity-75 group-hover:brightness-110"
               }`}
@@ -41,12 +53,12 @@ const AvatarSelector = () => {
           </div>
           <p
             className={`mt-2 text-sm font-semibold transition-all duration-300 ${
-              selectedName === avatar.name
+              selectedAuthor?.id === author.id
                 ? "text-gray-900"
                 : "text-gray-500 group-hover:text-gray-700"
             }`}
           >
-            {avatar.name}
+            {author.name}
           </p>
         </div>
       ))}

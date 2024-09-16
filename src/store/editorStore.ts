@@ -1,127 +1,52 @@
 import { create } from "zustand";
+import { Author } from "./authorStore";
+import { Category } from "./category";
 
-export interface Author {
-  id: number;
-  name: string;
-  src: string;
-  rectSrc: string;
-  introduction: string;
-}
-
-interface ProfileStore {
-  authors: Author[];
-  selectedAuthor: Author | null;
-  addAuthor: (author: Author) => void;
-  updateAuthor: (updatedAuthor: Author) => void;
-  deleteAuthor: (id: number) => void;
-  setSelectedAuthor: (author: Author | null) => void;
-}
-
-//dummy data
-// 이학찬-LeeHakchan
-// 이현우-LeeHyunwoo
-// 황용하-HwangYongha
-// 정현탁-JungHyuntak
-// 박정훈-ParkJunghoon
-// 박동민-ParkDongmin
-// 박형일-ParkHyungil
-// 장태호-JangTaeho
-export const initialAuthors: Author[] = [
-  {
-    id: 1,
-    name: "이현우",
-    src: "/admin/ParkJunghoon.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-  {
-    id: 2,
-    name: "황용하",
-    src: "/admin/ParkJunghoon.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-  {
-    id: 3,
-    name: "이학찬",
-    src: "/admin/ParkJunghoon.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-  {
-    id: 4,
-    name: "박동민",
-    src: "/admin/ParkDongmin.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-  {
-    id: 5,
-    name: "정현탁",
-    src: "/admin/ParkJunghoon.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-  {
-    id: 6,
-    name: "장태호",
-    src: "/admin/ParkJunghoon.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-  {
-    id: 7,
-    name: "박형일",
-    src: "/admin/ParkJunghoon.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-  {
-    id: 8,
-    name: "박정훈",
-    src: "/admin/ParkJunghoon.webp",
-    rectSrc: "/admin/ParkJunghoon.webp",
-    introduction:
-      "안녕하세요 저는 일본 오타쿠 개발자입니다(기존소개글 or 추후(수정)가능)",
-  },
-];
-export const useProfileStore = create<ProfileStore>((set) => ({
-  authors: initialAuthors,
-  selectedAuthor: null,
-  addAuthor: (author) =>
-    set((state) => ({
-      authors: [...state.authors, { ...author, id: Date.now() }],
-    })),
-  updateAuthor: (updatedAuthor) =>
-    set((state) => ({
-      authors: state.authors.map((author) =>
-        author.id === updatedAuthor.id ? updatedAuthor : author
-      ),
-    })),
-  deleteAuthor: (id) =>
-    set((state) => ({
-      authors: state.authors.filter((author) => author.id !== id),
-    })),
-  setSelectedAuthor: (author) => set({ selectedAuthor: author }),
-}));
-
+// Editor Store Interface
 interface EditorStore {
   editorData: string;
   selectedAuthor: Author | null;
-  setEditorData: (data: string) => void;
+  categoryList: Category[];
+  // 선택된 카테고리의 permalink 배열
+  selectedCategories: string[];
+  title: string;
+  subtitle: string;
+  permalink: string;
+  // yyyymmddhhmm 형식
+  publishTime: string | undefined;
+  isSubmitDisabled: boolean;
+  setIsSubmitDisabled: (disabled: boolean) => void;
+  setEditorData: (data: string | ((prevData: string) => string)) => void;
   setSelectedAuthor: (author: Author) => void;
+  setCategoryList: (categories: Category[]) => void;
+  setSelectedCategories: (categories: string[]) => void;
+  setTitle: (title: string) => void;
+  setSubtitle: (subtitle: string) => void;
+  setPermalink: (permalink: string) => void;
+  setPublishTime: (publishTime: string | undefined) => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
   editorData: "",
   selectedAuthor: null,
-  setEditorData: (data) => set({ editorData: data }),
+  categoryList: [],
+  selectedCategories: [],
+  title: "",
+  subtitle: "",
+  permalink: "",
+  publishTime: "",
+  isSubmitDisabled: false,
+  setIsSubmitDisabled: (disabled) => set({ isSubmitDisabled: disabled }),
+  setEditorData: (data) =>
+    set((state) => ({
+      editorData: typeof data === "function" ? data(state.editorData) : data,
+    })),
   setSelectedAuthor: (author) => set({ selectedAuthor: author }),
+  setCategoryList: (categories) => set({ categoryList: categories }),
+  setSelectedCategories: (categories) =>
+    set({ selectedCategories: categories }),
+  setTitle: (title) => set({ title }),
+  setSubtitle: (subtitle) => set({ subtitle }),
+  setPermalink: (permalink) => set({ permalink }),
+  setPublishTime: (publishTime) => set({ publishTime }),
 }));

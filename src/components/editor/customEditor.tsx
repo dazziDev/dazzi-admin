@@ -1,22 +1,28 @@
 "use client";
-import { ClassicEditor } from "ckeditor5";
-
 import { saveEditorContent } from "@/app/api/ediotr";
 import { editorConfig } from "@/config/editorConfig";
-import { processEditorContent } from "@/lib/utils";
+import { processEditorContent } from "@/hooks/useEditorImgProcess";
 import { useEditorStore } from "@/store/editorStore";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { ClassicEditor } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import AvatarSelector from "../adminAvatar/avatarSelector";
 import { Button } from "../ui/button";
 
-const CustomEditor: React.FC = () => {
+import CategoryInput from "./categoryInput";
+import PermalinkInput from "./permalinkInput";
+import PublishTimeInput from "./publishTimeInput";
+import SubtitleInput from "./subtitleInput";
+import TitleInput from "./titleInput";
+
+const CustomEditor = () => {
   const editorRef = useRef<ClassicEditor | null>(null);
-  const { editorData, setEditorData, selectedAuthor } = useEditorStore();
+  const { editorData, setEditorData, selectedAuthor, isSubmitDisabled } =
+    useEditorStore();
   const router = useRouter();
-  console.log("editorData", editorData);
+
   const handleEditorChange = (event: any, editor: any) => {
     const data = editor.getData();
     setEditorData(data);
@@ -36,60 +42,94 @@ const CustomEditor: React.FC = () => {
         </div>
       `;
 
-      let newData = editorData;
+      setEditorData((prevData) => {
+        let newData = prevData;
 
-      const profileCardRegex = /<div class="raw-html-embed">[\s\S]*?<\/div>/g;
-      if (profileCardRegex.test(newData)) {
-        newData = newData.replace(profileCardRegex, "");
-      }
-      newData += profileCardHtml;
+        const profileCardRegex = /<div class="raw-html-embed">[\s\S]*?<\/div>/g;
+        if (profileCardRegex.test(newData)) {
+          newData = newData.replace(profileCardRegex, "");
+        }
+        newData += profileCardHtml;
 
-      setEditorData(newData);
+        return newData;
+      });
     }
-  }, [selectedAuthor]);
+  }, [selectedAuthor, setEditorData]);
 
   useEffect(() => {
     if (editorRef.current && editorData) {
-      editorRef.current.setData(editorData);
+      if (editorRef.current.getData() !== editorData) {
+        editorRef.current.setData(editorData);
+      }
     }
   }, [editorData]);
 
-  // const handleSubmit = () => {
-  //   const uniqueId = Date.now().toString();
-  //   router.push(`/preview/${uniqueId}`);
-  // };
   const handleSubmit = async () => {
     try {
+      const {
+        editorData,
+        selectedAuthor,
+        selectedCategories,
+        title,
+        subtitle,
+        permalink,
+        publishTime,
+      } = useEditorStore.getState();
+
+      if (!selectedAuthor) {
+        alert("기사 작성자를 선택해주세요.");
+        return;
+      }
+
       // 1. 에디터 콘텐츠 가져오기
       const content: string = editorData;
 
-      // 2. 콘텐츠에서 이미지 처리 (유틸리티 함수 사용)
+      // 2. 콘텐츠에서 이미지 처리
       const { modifiedContent, imageFiles } = await processEditorContent(
         content
       );
 
       // 3. FormData 생성 및 데이터 추가
       const formData = new FormData();
+      formData.append("editorId", selectedAuthor.id.toString());
+      selectedCategories.forEach((category) => {
+        formData.append("category[]", category);
+      });
+      formData.append("title", title);
+      formData.append("subtitle", subtitle);
       formData.append("content", modifiedContent);
       imageFiles.forEach((file) => {
         formData.append("images", file);
       });
+      formData.append("permalink", permalink);
 
-      // 4. 백엔드로 데이터 전송 (API 함수 사용)
-      await saveEditorContent(formData);
+      // 즉시공개일때 아예안보냄
+      if (publishTime !== undefined) {
+        formData.append("publishTime", publishTime);
+      }
+      // 즉시공개일때 언디파인드로 명시적으로 보냄
+      // formData.append("publishTime", publishTime ?? "");
+
+      // 4. 백엔드로 데이터 전송
+      const response = await saveEditorContent(formData);
       console.log("formData", formData);
-      // 성공 시 페이지 이동 또는 알림 표시
-      const uniqueId = Date.now().toString();
-      router.push(`/preview/${uniqueId}`);
+
+      // 통신 성공 후 permalinks로 이동
+      router.push(`/preview/${response.permalink}`);
     } catch (error) {
       console.error("Failed to save content:", error);
-      // 에러 처리 로직 추가 (예: 알림 표시)
+      // 에러 처리 로직 추가
     }
   };
 
   return (
     <div className="relative pb-16 max-w-5xl mx-auto">
       <AvatarSelector />
+      <CategoryInput />
+      <TitleInput />
+      <SubtitleInput />
+      <PermalinkInput />
+      <PublishTimeInput />
       <div className="main-container">
         <div className="editor-container pb-1 editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar">
           <div className="editor-container__editor">
@@ -104,6 +144,7 @@ const CustomEditor: React.FC = () => {
         <Button
           className="absolute right-0 bottom-0 m-4"
           onClick={handleSubmit}
+          disabled={isSubmitDisabled}
         >
           확인
         </Button>

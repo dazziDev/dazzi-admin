@@ -1,9 +1,8 @@
-// src/lib/api.ts
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 interface SaveContentResponse {
-  success: boolean;
-  [key: string]: any;
+  articleId: number;
+  permalink: string;
 }
 
 /**
@@ -16,7 +15,8 @@ export async function saveEditorContent(
 ): Promise<SaveContentResponse> {
   console.log("formData", formData);
   try {
-    const response = await axios.post("/api/save-content", formData, {
+    // get할때 permalinks endpoint
+    const response = await axiosInstance.post("/article/add", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

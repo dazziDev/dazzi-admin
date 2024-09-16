@@ -1,3 +1,3 @@
-const Home: React.FC = () => <div></div>;
+const Home = () => <div></div>;
 
 export default Home;

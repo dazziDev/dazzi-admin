@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Eye, Home, UserCogIcon } from "lucide-react";
 import Link from "next/link";
 
-const Sidebar: React.FC = () => (
+const Sidebar = () => (
   <div className="fixed left-0 top-0 h-full bg-gray-800 text-white w-16 flex flex-col items-center p-4 space-y-4 ">
     <Link href="/dashboard">
       <Button
@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => (
       </Button>
     </Link>
 
-    <Link href="/profile">
+    <Link href="/author">
       <Button variant="ghost" className="flex flex-col items-center space-y-2">
         <UserCogIcon />
       </Button>
