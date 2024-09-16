@@ -1,6 +1,5 @@
-import axiosInstance from "@/app/api/axiosInstance";
+import { fetchCategories } from "@/app/api/categories";
 import { MultipleSelector, Option } from "@/components/ui/multiSelect";
-import { Category } from "@/store/category";
 import { useEditorStore } from "@/store/editorStore";
 import { useEffect, useMemo, useState } from "react";
 
@@ -16,18 +15,12 @@ const CategoryInput = () => {
 
   useEffect(() => {
     // 카테고리 리스트 가져오기
-    const fetchCategories = async () => {
-      try {
-        // API 엔드포인트에 맞게 수정
-        const response = await axiosInstance.get("/categories/list");
-        const categories: Category[] = response.data;
-        setCategoryList(categories);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
 
-    fetchCategories();
+    const initialize = async () => {
+      const categories = await fetchCategories();
+      setCategoryList(categories);
+    };
+    initialize();
   }, [setCategoryList]);
 
   const options: Option[] = useMemo(() => {

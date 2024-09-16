@@ -21,9 +21,39 @@ export const fetchArticlesByCategory = async (
 };
 
 export const fetchCategories = async (): Promise<Category[]> => {
-  const response = await axiosInstance.get("/categories/list");
-  return response.data;
+  return initialCategories;
+  // const response = await axiosInstance.get("/categories/list");
+  // return response.data;
 };
+
+// 여기 카테고리 더미데이터 만들어줘
+const initialCategories: Category[] = [
+  {
+    id: 1,
+    label: "여행",
+    permalink: "travel",
+  },
+  {
+    id: 2,
+    label: "음식",
+    permalink: "food",
+  },
+  {
+    id: 3,
+    label: "일상",
+    permalink: "daily",
+  },
+  {
+    id: 4,
+    label: "거리인터뷰",
+    permalink: "street",
+  },
+  {
+    id: 5,
+    label: "패션",
+    permalink: "fashion",
+  },
+];
 
 export const addCategory = async (
   categories: AddCategoryRequest

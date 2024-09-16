@@ -72,7 +72,7 @@ const PublishTimeInput = () => {
         htmlFor="publishTime"
         className="block text-sm font-medium text-gray-700"
       >
-        기사 공개 시간
+        기사 공개 시간 (미선택시 즉시 공개)
       </label>
       <DatePicker
         id="publishTime"
