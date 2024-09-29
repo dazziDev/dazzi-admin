@@ -1,5 +1,5 @@
 "use client";
-import { saveEditorContent } from "@/app/api/ediotr";
+import { saveEditorContent } from "@/app/admin/api/ediotr";
 import { editorConfig } from "@/config/editorConfig";
 import { processEditorContent } from "@/hooks/useEditorImgProcess";
 import { useEditorStore } from "@/store/editorStore";
@@ -13,7 +13,6 @@ import { Button } from "../ui/button";
 
 import CategoryInput from "./categoryInput";
 import PermalinkInput from "./permalinkInput";
-import PublishTimeInput from "./publishTimeInput";
 import SubtitleInput from "./subtitleInput";
 import TitleInput from "./titleInput";
 
@@ -129,7 +128,7 @@ const CustomEditor = () => {
       <TitleInput />
       <SubtitleInput />
       <PermalinkInput />
-      <PublishTimeInput />
+      {/* <PublishTimeInput /> */}
       <div className="main-container">
         <div className="editor-container pb-1 editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar">
           <div className="editor-container__editor">

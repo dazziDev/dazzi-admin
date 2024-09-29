@@ -1,4 +1,4 @@
-import axiosInstance from "@/app/api/axiosInstance";
+import axiosInstance from "@/app/admin/api/axiosInstance";
 import { Author, initialAuthors } from "@/store/authorStore";
 import { useEditorStore } from "@/store/editorStore";
 import Image from "next/image";
