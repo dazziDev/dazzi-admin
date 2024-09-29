@@ -1,4 +1,3 @@
-import React from "react";
 import {
   VictoryAxis,
   VictoryBar,
@@ -24,7 +23,7 @@ interface UserEngagementData {
   y: number;
 }
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   // 더미 데이터
   const articleViewsData: ArticleViewsData[] = [
     { month: "1월", views: 8000 },

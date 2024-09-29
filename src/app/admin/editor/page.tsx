@@ -5,7 +5,7 @@ const CustomEditor = dynamic(() => import("@/components/editor/customEditor"), {
   ssr: false,
 });
 
-const EditorPage: React.FC = () => {
+const EditorPage = () => {
   return <CustomEditor />;
 };
 

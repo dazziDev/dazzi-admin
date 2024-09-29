@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 
 const AvatarUpload = ({
