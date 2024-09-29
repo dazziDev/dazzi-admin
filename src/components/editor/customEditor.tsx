@@ -1,5 +1,5 @@
 "use client";
-import { saveEditorContent } from "@/app/admin/api/ediotr";
+import { saveEditorContent } from "@/app/api/ediotr";
 import { editorConfig } from "@/config/editorConfig";
 import { processEditorContent } from "@/hooks/useEditorImgProcess";
 import { useEditorStore } from "@/store/editorStore";

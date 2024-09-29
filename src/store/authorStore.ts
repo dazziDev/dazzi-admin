@@ -3,7 +3,7 @@ import {
   deleteAuthor as apiDeleteAuthor,
   fetchAuthors as apiFetchAuthors,
   updateAuthor as apiUpdateAuthor,
-} from "@/app/admin/api/authors";
+} from "@/app/api/authors";
 import { create } from "zustand";
 
 export interface Author {

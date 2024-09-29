@@ -1,4 +1,4 @@
-import { fetchCategories } from "@/app/admin/api/categories";
+import { fetchCategories } from "@/app/api/categories";
 import { MultipleSelector, Option } from "@/components/ui/multiSelect";
 import { useEditorStore } from "@/store/editorStore";
 import { useEffect, useMemo, useState } from "react";
