@@ -19,11 +19,11 @@ export async function saveEditorContent(
   try {
     // get할때 permalinks endpoint
     const response = await axios.post(
-      `http://localhost:80/api/v1/admin/article/add`,
+      `http://localhost/api/v1/admin/article/add`,
       formData,
       {
         headers: {
-          // "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data",
         },
       }
     );

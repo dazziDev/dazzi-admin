@@ -101,15 +101,8 @@ const CustomEditor = () => {
       };
       // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      // formData.append("data", JSON.stringify(data));
-      formData.append("editorId", data.editorId.toString()); // 숫자를 문자열로 변환
-      formData.append("categoryId", data.categoryId.toString()); // 숫자를 문자열로 변환
-      formData.append("title", data.title);
-      formData.append("subtitle", data.subtitle);
-      formData.append("text", data.text);
-      formData.append("permalink", data.permalink);
-      formData.append("isPublish", data.isPublish.toString()); // 불리언을 문자열로 변환
-      formData.append("isMainPublish", data.isMainPublish.toString()); // 불리언을 문자열로 변환
+      
+      formData.append("data", new Blob([JSON.stringify(data)], {type : 'application/json'}))
 
       imageFiles.forEach((file) => {
         formData.append("imageFiles", file);
