@@ -16,11 +16,15 @@ export async function saveEditorContent(
   console.log("formData", formData);
   try {
     // get할때 permalinks endpoint
-    const response = await axiosInstance.post("/article/add", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axiosInstance.post(
+      `http://localhost:80/api/v1/admin/article/add`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {

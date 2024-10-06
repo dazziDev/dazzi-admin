@@ -88,36 +88,35 @@ const CustomEditor = () => {
         content
       );
 
-      // 3. FormData 생성 및 데이터 추가
+      // 3. 데이터 객체 생성
+      const data = {
+        editorId: selectedAuthor.id,
+        categoryId: "1",
+        title,
+        subtitle,
+        text: modifiedContent,
+        permalink,
+        isPublish: true,
+        isMainPublish: true,
+      };
+      // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      formData.append("editorId", selectedAuthor.id.toString());
-      selectedCategories.forEach((category) => {
-        formData.append("category[]", category);
-      });
-      formData.append("title", title);
-      formData.append("subtitle", subtitle);
-      formData.append("content", modifiedContent);
+      formData.append("data", JSON.stringify(data));
+
       imageFiles.forEach((file) => {
-        formData.append("images", file);
+        formData.append("imageFiles", file);
       });
-      formData.append("permalink", permalink);
 
-      // 즉시공개일때 아예안보냄
-      if (publishTime !== undefined) {
-        formData.append("publishTime", publishTime);
-      }
-      // 즉시공개일때 언디파인드로 명시적으로 보냄
-      // formData.append("publishTime", publishTime ?? "");
-
-      // 4. 백엔드로 데이터 전송
+      // 5. 백엔드로 데이터 전송
       const response = await saveEditorContent(formData);
-      console.log("formData", formData);
+      console.log("Response:", response);
 
       // 통신 성공 후 permalinks로 이동
       router.push(`/preview/${response.permalink}`);
     } catch (error) {
       console.error("Failed to save content:", error);
       // 에러 처리 로직 추가
+      alert("콘텐츠 저장에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
