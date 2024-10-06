@@ -21,7 +21,7 @@ export async function saveEditorContent(
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
         },
       }
     );

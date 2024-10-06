@@ -91,7 +91,7 @@ const CustomEditor = () => {
       // 3. 데이터 객체 생성
       const data = {
         editorId: selectedAuthor.id,
-        categoryId: "1",
+        categoryId: 1,
         title,
         subtitle,
         text: modifiedContent,
@@ -101,11 +101,25 @@ const CustomEditor = () => {
       };
       // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      formData.append("data", JSON.stringify(data));
+      // formData.append("data", JSON.stringify(data));
+      // formData.append("data", data);
+      formData.append("editorId", "1");
+      formData.append("categoryId", "1");
+      formData.append("title", "test");
+      formData.append("subtitle", "subtitle");
+      formData.append("text", "text");
+      formData.append("permalink", "permalink");
+      formData.append("isPublish", "true");
+      formData.append("isMainPublish", "true");
 
       imageFiles.forEach((file) => {
         formData.append("imageFiles", file);
       });
+      console.log("formData", formData);
+
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
+      }
 
       // 5. 백엔드로 데이터 전송
       const response = await saveEditorContent(formData);
