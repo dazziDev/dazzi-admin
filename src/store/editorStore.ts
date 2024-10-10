@@ -7,19 +7,18 @@ interface EditorStore {
   editorData: string;
   selectedAuthor: Author | null;
   categoryList: Category[];
-  // 선택된 카테고리의 permalink 배열
-  selectedCategories: string[];
+  // 카테고리 같은경우는 카테고리 API로 받아온 데이터를 사용
+  selectedCategories: string;
   title: string;
   subtitle: string;
   permalink: string;
-  // yyyymmddhhmm 형식
   publishTime: string | undefined;
   isSubmitDisabled: boolean;
   setIsSubmitDisabled: (disabled: boolean) => void;
   setEditorData: (data: string | ((prevData: string) => string)) => void;
   setSelectedAuthor: (author: Author) => void;
   setCategoryList: (categories: Category[]) => void;
-  setSelectedCategories: (categories: string[]) => void;
+  setSelectedCategories: (categories: string) => void;
   setTitle: (title: string) => void;
   setSubtitle: (subtitle: string) => void;
   setPermalink: (permalink: string) => void;
@@ -30,7 +29,7 @@ export const useEditorStore = create<EditorStore>((set) => ({
   editorData: "",
   selectedAuthor: null,
   categoryList: [],
-  selectedCategories: [],
+  selectedCategories: "",
   title: "",
   subtitle: "",
   permalink: "",

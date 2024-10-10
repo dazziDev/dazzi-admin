@@ -91,18 +91,21 @@ const CustomEditor = () => {
       // 3. 데이터 객체 생성
       const data = {
         editorId: selectedAuthor.id,
-        categoryId: 1,
-        title,
-        subtitle,
+        categoryId: selectedCategories,
+        title: title,
+        subtitle: subtitle,
         text: modifiedContent,
-        permalink,
+        permalink: permalink,
         isPublish: true,
         isMainPublish: true,
       };
       // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      
-      formData.append("data", new Blob([JSON.stringify(data)], {type : 'application/json'}))
+
+      formData.append(
+        "data",
+        new Blob([JSON.stringify(data)], { type: "application/json" })
+      );
 
       imageFiles.forEach((file) => {
         formData.append("imageFiles", file);
