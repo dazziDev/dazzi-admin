@@ -1,14 +1,11 @@
 import { create } from "zustand";
 import { Author } from "./authorStore";
-import { Category } from "./category";
 
-// Editor Store Interface
 interface EditorStore {
   editorData: string;
   selectedAuthor: Author | null;
-  categoryList: Category[];
   // 카테고리 같은경우는 카테고리 API로 받아온 데이터를 사용
-  selectedCategories: string;
+  selectedCategories: string[];
   title: string;
   subtitle: string;
   permalink: string;
@@ -17,8 +14,7 @@ interface EditorStore {
   setIsSubmitDisabled: (disabled: boolean) => void;
   setEditorData: (data: string | ((prevData: string) => string)) => void;
   setSelectedAuthor: (author: Author) => void;
-  setCategoryList: (categories: Category[]) => void;
-  setSelectedCategories: (categories: string) => void;
+  setSelectedCategories: (categories: string[]) => void;
   setTitle: (title: string) => void;
   setSubtitle: (subtitle: string) => void;
   setPermalink: (permalink: string) => void;
@@ -28,8 +24,7 @@ interface EditorStore {
 export const useEditorStore = create<EditorStore>((set) => ({
   editorData: "",
   selectedAuthor: null,
-  categoryList: [],
-  selectedCategories: "",
+  selectedCategories: [],
   title: "",
   subtitle: "",
   permalink: "",
@@ -41,7 +36,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
       editorData: typeof data === "function" ? data(state.editorData) : data,
     })),
   setSelectedAuthor: (author) => set({ selectedAuthor: author }),
-  setCategoryList: (categories) => set({ categoryList: categories }),
   setSelectedCategories: (categories) =>
     set({ selectedCategories: categories }),
   setTitle: (title) => set({ title }),
