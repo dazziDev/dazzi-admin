@@ -9,7 +9,7 @@ interface AddCategoryModalProps {
 
 const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
   const { categoryList, addCategory: addCategoryToStore } = useCategoryStore();
-  const [title, setTitle] = useState("");
+  const [categoryName, setCategoryName] = useState("");
   const [permalink, setPermalink] = useState("");
   const [priority, setPriority] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +20,11 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
     setIsSubmitting(true);
     setError(null);
     try {
-      const newCategory: AddCategoryRequest = { title, permalink, priority };
+      const newCategory: AddCategoryRequest = {
+        title: categoryName,
+        permalink,
+        priority: String(priority),
+      };
 
       // 퍼머링크 중복 확인
       if (categoryList.some((cat) => cat.permalink === permalink)) {
@@ -72,8 +76,8 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
             </label>
             <input
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500"
               placeholder="카테고리명을 입력하세요"

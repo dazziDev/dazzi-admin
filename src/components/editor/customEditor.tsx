@@ -11,6 +11,7 @@ import { useEffect, useRef } from "react";
 import AvatarSelector from "../adminAvatar/avatarSelector";
 import { Button } from "../ui/button";
 
+import CategoryInput from "./categoryInput";
 import PermalinkInput from "./permalinkInput";
 import SubtitleInput from "./subtitleInput";
 import TitleInput from "./titleInput";
@@ -90,8 +91,8 @@ const CustomEditor = () => {
       // 3. 데이터 객체 생성
       const data = {
         editorId: selectedAuthor.id,
-        // categoryId: selectedCategories,
-        categoryId: 1,
+        categoryId: selectedCategories,
+        // categoryId: 1,
         title: title,
         subtitle: subtitle,
         text: modifiedContent,
@@ -101,6 +102,12 @@ const CustomEditor = () => {
       };
       // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
+      // TODO: 이미지 사이즈 고정
+      // TODO: 카테고리(등록,선택) API 따로 연동
+      // TODO: 공개여부 체크박스 추가
+      // TODO: 메인공개여부 체크박스 추가
+      // TODO: 썸네일 사진같은경우는 이미지 파일 배열에 0번째로 추가
+      // TODO: 썸네일 사진 따로 받아야함.
 
       formData.append(
         "data",
@@ -132,7 +139,7 @@ const CustomEditor = () => {
   return (
     <div className="relative pb-16 max-w-5xl mx-auto">
       <AvatarSelector />
-      {/* <CategoryInput /> */}
+      <CategoryInput />
       <TitleInput />
       <SubtitleInput />
       <PermalinkInput />

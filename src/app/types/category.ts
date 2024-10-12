@@ -1,6 +1,6 @@
 export interface Category {
-  id: number;
-  title: string; // 카테고리명
+  categoryId: number; // 카테고리ID
+  categoryName: string; // 카테고리명
   permalink: string; // 퍼머링크
   priority: number; // 출력순위
 }
@@ -8,5 +8,5 @@ export interface Category {
 export interface AddCategoryRequest {
   title: string; // 카테고리명
   permalink: string; // 퍼머링크
-  priority: number; // 출력순위
+  priority: string; // 출력순위
 }
