@@ -11,7 +11,6 @@ import { useEffect, useRef } from "react";
 import AvatarSelector from "../adminAvatar/avatarSelector";
 import { Button } from "../ui/button";
 
-import CategoryInput from "./categoryInput";
 import PermalinkInput from "./permalinkInput";
 import SubtitleInput from "./subtitleInput";
 import TitleInput from "./titleInput";
@@ -91,7 +90,8 @@ const CustomEditor = () => {
       // 3. 데이터 객체 생성
       const data = {
         editorId: selectedAuthor.id,
-        categoryId: selectedCategories,
+        // categoryId: selectedCategories,
+        categoryId: 1,
         title: title,
         subtitle: subtitle,
         text: modifiedContent,
@@ -132,7 +132,7 @@ const CustomEditor = () => {
   return (
     <div className="relative pb-16 max-w-5xl mx-auto">
       <AvatarSelector />
-      <CategoryInput />
+      {/* <CategoryInput /> */}
       <TitleInput />
       <SubtitleInput />
       <PermalinkInput />
