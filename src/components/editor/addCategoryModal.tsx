@@ -1,5 +1,8 @@
-import { addCategory as apiAddCategory } from "@/app/api/categories"; // API 함수 rename
-import { AddCategoryRequest, Category } from "@/app/types/category";
+import {
+  addCategory as apiAddCategory,
+  fetchCategories,
+} from "@/app/api/categories"; // API 함수 rename
+import { AddCategoryRequest } from "@/app/types/category";
 import { useCategoryStore } from "@/store/categoryStore";
 import { useState } from "react";
 
@@ -8,7 +11,12 @@ interface AddCategoryModalProps {
 }
 
 const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
-  const { categoryList, addCategory: addCategoryToStore } = useCategoryStore();
+  const {
+    categoryList,
+    setCategoryList,
+    addCategory: addCategoryToStore,
+  } = useCategoryStore();
+
   const [categoryName, setCategoryName] = useState("");
   const [permalink, setPermalink] = useState("");
   const [priority, setPriority] = useState<number>(0);
@@ -33,8 +41,12 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
         return;
       }
 
-      const createdCategory: Category = await apiAddCategory(newCategory);
-      addCategoryToStore(createdCategory);
+      // 새로운 카테고리 추가
+      await apiAddCategory(newCategory);
+
+      // 카테고리 리스트 재조회 후 상태 업데이트
+      const updatedCategories = await fetchCategories();
+      setCategoryList(updatedCategories); // 상태 업데이트
       onClose();
     } catch (err: any) {
       if (err.response) {

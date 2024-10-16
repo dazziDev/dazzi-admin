@@ -10,8 +10,8 @@ const CategoryInput = () => {
   const { setSelectedCategories } = useEditorStore();
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
-  const [error, setError] = useState<string | null>(null); // 에러 상태 추가
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const initialize = async () => {
@@ -63,8 +63,10 @@ const CategoryInput = () => {
 
   const handleChange = (options: Option[]) => {
     setSelectedOptions(options);
-    const selectedPermalinks = options.map((option) => option.value);
-    setSelectedCategories(selectedPermalinks);
+    // 단일 카테고리 선택이므로 첫 번째 값
+    const selectedPermalink = options[0]?.value;
+    // permalink로 저장
+    setSelectedCategories([selectedPermalink]);
   };
 
   const openModal = () => setIsModalOpen(true);
@@ -90,6 +92,7 @@ const CategoryInput = () => {
             value={selectedOptions}
             onChange={handleChange}
             placeholder="카테고리를 선택하세요"
+            key={options.map((opt) => opt.value).join(",")}
           />
         </div>
         <button

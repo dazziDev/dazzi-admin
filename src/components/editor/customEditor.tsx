@@ -11,6 +11,7 @@ import { useEffect, useRef } from "react";
 import AvatarSelector from "../adminAvatar/avatarSelector";
 import { Button } from "../ui/button";
 
+import { useCategoryStore } from "@/store/categoryStore";
 import CategoryInput from "./categoryInput";
 import PermalinkInput from "./permalinkInput";
 import SubtitleInput from "./subtitleInput";
@@ -20,7 +21,14 @@ const CustomEditor = () => {
   const editorRef = useRef<ClassicEditor | null>(null);
   const { editorData, setEditorData, selectedAuthor, isSubmitDisabled } =
     useEditorStore();
+
   const router = useRouter();
+
+  const {
+    categoryList,
+    setCategoryList,
+    addCategory: addCategoryToStore,
+  } = useCategoryStore();
 
   const handleEditorChange = (event: any, editor: any) => {
     const data = editor.getData();
@@ -75,10 +83,14 @@ const CustomEditor = () => {
         publishTime,
       } = useEditorStore.getState();
 
-      if (!selectedAuthor) {
-        alert("기사 작성자를 선택해주세요.");
+      if (!selectedAuthor || !selectedCategories[0]) {
+        alert("기사 작성자와 카테고리를 선택해주세요.");
         return;
       }
+      const selectedPermalink = selectedCategories[0];
+      const selectedCategory = categoryList.find(
+        (category) => category.permalink === selectedPermalink
+      );
 
       // 1. 에디터 콘텐츠 가져오기
       const content: string = editorData;
@@ -91,7 +103,7 @@ const CustomEditor = () => {
       // 3. 데이터 객체 생성
       const data = {
         editorId: selectedAuthor.id,
-        categoryId: selectedCategories,
+        categoryId: selectedCategory?.categoryId,
         // categoryId: 1,
         title: title,
         subtitle: subtitle,
@@ -125,7 +137,15 @@ const CustomEditor = () => {
 
       // 5. 백엔드로 데이터 전송
       const response = await saveEditorContent(formData);
-      console.log("Response:", response);
+      // console.log("Response:", response);
+
+      // console.log("editorData", editorData);
+      // console.log("selectedAuthor", selectedAuthor);
+      // console.log("title", title);
+      // console.log("subtitle", subtitle);
+      // console.log("permalink", permalink);
+      // console.log("publishTime", publishTime);
+      // console.log("selectedCategories", selectedCategories);
 
       // 통신 성공 후 permalinks로 이동
       router.push(`/preview/${response.permalink}`);
