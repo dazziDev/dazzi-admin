@@ -11,6 +11,7 @@ import { useEffect, useRef } from "react";
 import AvatarSelector from "../adminAvatar/avatarSelector";
 import { Button } from "../ui/button";
 
+import { useCategoryStore } from "@/store/categoryStore";
 import CategoryInput from "./categoryInput";
 import PermalinkInput from "./permalinkInput";
 import SubtitleInput from "./subtitleInput";
@@ -20,7 +21,14 @@ const CustomEditor = () => {
   const editorRef = useRef<ClassicEditor | null>(null);
   const { editorData, setEditorData, selectedAuthor, isSubmitDisabled } =
     useEditorStore();
+
   const router = useRouter();
+
+  const {
+    categoryList,
+    setCategoryList,
+    addCategory: addCategoryToStore,
+  } = useCategoryStore();
 
   const handleEditorChange = (event: any, editor: any) => {
     const data = editor.getData();
@@ -75,10 +83,14 @@ const CustomEditor = () => {
         publishTime,
       } = useEditorStore.getState();
 
-      if (!selectedAuthor) {
-        alert("기사 작성자를 선택해주세요.");
+      if (!selectedAuthor || !selectedCategories[0]) {
+        alert("기사 작성자와 카테고리를 선택해주세요.");
         return;
       }
+      const selectedPermalink = selectedCategories[0];
+      const selectedCategory = categoryList.find(
+        (category) => category.permalink === selectedPermalink
+      );
 
       // 1. 에디터 콘텐츠 가져오기
       const content: string = editorData;
@@ -88,36 +100,59 @@ const CustomEditor = () => {
         content
       );
 
-      // 3. FormData 생성 및 데이터 추가
+      // 3. 데이터 객체 생성
+      const data = {
+        editorId: selectedAuthor.id,
+        categoryId: selectedCategory?.categoryId,
+        // categoryId: 1,
+        title: title,
+        subtitle: subtitle,
+        text: modifiedContent,
+        permalink: permalink,
+        isPublish: true,
+        isMainPublish: true,
+      };
+      // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      formData.append("editorId", selectedAuthor.id.toString());
-      selectedCategories.forEach((category) => {
-        formData.append("category[]", category);
-      });
-      formData.append("title", title);
-      formData.append("subtitle", subtitle);
-      formData.append("content", modifiedContent);
+      // TODO: 이미지 사이즈 고정
+      // TODO: 카테고리(등록,선택) API 따로 연동
+      // TODO: 공개여부 체크박스 추가
+      // TODO: 메인공개여부 체크박스 추가
+      // TODO: 썸네일 사진같은경우는 이미지 파일 배열에 0번째로 추가
+      // TODO: 썸네일 사진 따로 받아야함.
+
+      formData.append(
+        "data",
+        new Blob([JSON.stringify(data)], { type: "application/json" })
+      );
+
       imageFiles.forEach((file) => {
-        formData.append("images", file);
+        formData.append("imageFiles", file);
       });
-      formData.append("permalink", permalink);
-
-      // 즉시공개일때 아예안보냄
-      if (publishTime !== undefined) {
-        formData.append("publishTime", publishTime);
-      }
-      // 즉시공개일때 언디파인드로 명시적으로 보냄
-      // formData.append("publishTime", publishTime ?? "");
-
-      // 4. 백엔드로 데이터 전송
-      const response = await saveEditorContent(formData);
       console.log("formData", formData);
+
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
+      }
+
+      // 5. 백엔드로 데이터 전송
+      const response = await saveEditorContent(formData);
+      // console.log("Response:", response);
+
+      // console.log("editorData", editorData);
+      // console.log("selectedAuthor", selectedAuthor);
+      // console.log("title", title);
+      // console.log("subtitle", subtitle);
+      // console.log("permalink", permalink);
+      // console.log("publishTime", publishTime);
+      // console.log("selectedCategories", selectedCategories);
 
       // 통신 성공 후 permalinks로 이동
       router.push(`/preview/${response.permalink}`);
     } catch (error) {
       console.error("Failed to save content:", error);
       // 에러 처리 로직 추가
+      alert("콘텐츠 저장에 실패했습니다. 다시 시도해주세요.");
     }
   };
 

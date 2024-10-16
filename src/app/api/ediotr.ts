@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 interface SaveContentResponse {
   articleId: number;
@@ -13,14 +13,15 @@ interface SaveContentResponse {
 export async function saveEditorContent(
   formData: FormData
 ): Promise<SaveContentResponse> {
-  console.log("formData", formData);
+  for (let pair of formData.entries()) {
+    console.log(`${pair[0]}:`, pair[1]);
+  }
   try {
     // get할때 permalinks endpoint
-    const response = await axiosInstance.post("/article/add", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/add`,
+      formData
+    );
 
     return response.data;
   } catch (error) {
