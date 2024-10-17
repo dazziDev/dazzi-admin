@@ -1,4 +1,3 @@
-import axiosInstance from "@/app/api/axiosInstance";
 import { Author, initialAuthors } from "@/store/authorStore";
 import { useEditorStore } from "@/store/editorStore";
 import Image from "next/image";
@@ -13,9 +12,9 @@ const AvatarSelector = () => {
     // 에디터 리스트 가져와서 사용
     const fetchAuthors = async () => {
       try {
-        const response = await axiosInstance.get("/authors/list");
-        const authorsData: Author[] = response.data;
-        setAuthors(authorsData);
+        // const response = await axiosInstance.get("/authors/list");
+        // const authorsData: Author[] = response.data;
+        // setAuthors(authorsData);
       } catch (error) {
         console.error("Failed to fetch authors:", error);
       }

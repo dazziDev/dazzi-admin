@@ -11,6 +11,8 @@ interface EditorStore {
   permalink: string;
   publishTime: string | undefined;
   isSubmitDisabled: boolean;
+  isPublish: boolean;
+  isMainPublish: boolean;
   setIsSubmitDisabled: (disabled: boolean) => void;
   setEditorData: (data: string | ((prevData: string) => string)) => void;
   setSelectedAuthor: (author: Author) => void;
@@ -19,6 +21,8 @@ interface EditorStore {
   setSubtitle: (subtitle: string) => void;
   setPermalink: (permalink: string) => void;
   setPublishTime: (publishTime: string | undefined) => void;
+  setIsPublish: (publish: boolean) => void;
+  setIsMainPublish: (mainPublish: boolean) => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
@@ -30,6 +34,8 @@ export const useEditorStore = create<EditorStore>((set) => ({
   permalink: "",
   publishTime: "",
   isSubmitDisabled: false,
+  isPublish: true,
+  isMainPublish: false,
   setIsSubmitDisabled: (disabled) => set({ isSubmitDisabled: disabled }),
   setEditorData: (data) =>
     set((state) => ({
@@ -42,4 +48,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
   setSubtitle: (subtitle) => set({ subtitle }),
   setPermalink: (permalink) => set({ permalink }),
   setPublishTime: (publishTime) => set({ publishTime }),
+  setIsPublish: (publish) => set({ isPublish: publish }),
+  setIsMainPublish: (mainPublish) => set({ isMainPublish: mainPublish }),
 }));

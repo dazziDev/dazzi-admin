@@ -22,7 +22,8 @@ export async function saveEditorContent(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/add`,
       formData
     );
-
+    console.log("response", response);
+    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to save content:", error);

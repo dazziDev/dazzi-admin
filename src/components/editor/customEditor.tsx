@@ -13,7 +13,9 @@ import { Button } from "../ui/button";
 
 import { useCategoryStore } from "@/store/categoryStore";
 import CategoryInput from "./categoryInput";
+import MainPublishToggle from "./mainPublishToggle";
 import PermalinkInput from "./permalinkInput";
+import PublishToggle from "./publishToggle";
 import SubtitleInput from "./subtitleInput";
 import TitleInput from "./titleInput";
 
@@ -80,6 +82,8 @@ const CustomEditor = () => {
         title,
         subtitle,
         permalink,
+        isPublish,
+        isMainPublish,
         publishTime,
       } = useEditorStore.getState();
 
@@ -109,8 +113,8 @@ const CustomEditor = () => {
         subtitle: subtitle,
         text: modifiedContent,
         permalink: permalink,
-        isPublish: true,
-        isMainPublish: true,
+        isPublish: isPublish,
+        isMainPublish: isMainPublish,
       };
       // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
@@ -137,17 +141,9 @@ const CustomEditor = () => {
 
       // 5. 백엔드로 데이터 전송
       const response = await saveEditorContent(formData);
-      // console.log("Response:", response);
-
-      // console.log("editorData", editorData);
-      // console.log("selectedAuthor", selectedAuthor);
-      // console.log("title", title);
-      // console.log("subtitle", subtitle);
-      // console.log("permalink", permalink);
-      // console.log("publishTime", publishTime);
-      // console.log("selectedCategories", selectedCategories);
 
       // 통신 성공 후 permalinks로 이동
+      // response 없음
       router.push(`/preview/${response.permalink}`);
     } catch (error) {
       console.error("Failed to save content:", error);
@@ -163,6 +159,10 @@ const CustomEditor = () => {
       <TitleInput />
       <SubtitleInput />
       <PermalinkInput />
+      <div className="gap-4 flex flex-wrap">
+        <PublishToggle />
+        <MainPublishToggle />
+      </div>
       {/* <PublishTimeInput /> */}
       <div className="main-container">
         <div className="editor-container pb-1 editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar">
