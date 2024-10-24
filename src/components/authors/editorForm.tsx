@@ -1,25 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Author, useAuthorStore } from "@/store/authorStore";
+import { Editor, useEditorStore } from "@/store/editorStore";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 
-interface AuthorFormProps {
-  initialAuthor?: Author;
+interface EditorFormProps {
+  initialEditor?: Editor;
   onClose: () => void;
 }
 
-const AuthorForm = ({ initialAuthor, onClose }: AuthorFormProps) => {
-  const { addAuthor, updateAuthor } = useAuthorStore();
-  const [authorData, setAuthorData] = useState<Author>(
-    initialAuthor || {
-      id: 0,
-      name: "",
-      introduction: "",
-      src: "",
-      rectSrc: "",
+const EditorForm = ({ initialEditor, onClose }: EditorFormProps) => {
+  const { addEditor } = useEditorStore();
+  const [editorData, setEditorData] = useState<Editor>(
+    initialEditor || {
+      editorId: "",
+      editorName: "",
+      description: "",
+      articleImage: "",
+      introduceImage: "",
     }
   );
 
@@ -41,51 +41,56 @@ const AuthorForm = ({ initialAuthor, onClose }: AuthorFormProps) => {
       }
     }
   };
-
   const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append("name", authorData.name);
-    formData.append("introduction", authorData.introduction);
 
-    const promises = [];
+    // 이름, 설명, 활성화 상태를 필드로 추가
+    formData.append("name", editorData.editorName);
+    formData.append("description", editorData.description);
+    formData.append("isActivate", "true");
 
+    const imageFiles: File[] = [];
+
+    // 프로필 이미지(원형) 처리
     if (avatar && editorRef.current) {
       const canvas = editorRef.current.getImageScaledToCanvas();
-      promises.push(
-        new Promise<void>((resolve) => {
-          canvas.toBlob((blob) => {
-            if (blob) {
-              formData.append("circleImage", blob, "circleImage.png");
-            }
-            resolve();
-          });
-        })
-      );
+      const avatarBlob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob));
+      });
+      if (avatarBlob) {
+        const file = new File([avatarBlob], "articleImage.png", {
+          type: "image/png",
+        });
+        imageFiles.push(file);
+      }
     }
 
+    // 소개용 이미지(사각형) 처리
     if (rectAvatar && rectEditorRef.current) {
       const canvas = rectEditorRef.current.getImageScaledToCanvas();
-      promises.push(
-        new Promise<void>((resolve) => {
-          canvas.toBlob((blob) => {
-            if (blob) {
-              formData.append("rectImage", blob, "rectImage.png");
-            }
-            resolve();
-          });
-        })
-      );
+      const rectBlob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob));
+      });
+      if (rectBlob) {
+        const file = new File([rectBlob], "introduceImage.png", {
+          type: "image/png",
+        });
+        imageFiles.push(file);
+      }
     }
 
-    await Promise.all(promises);
+    // 이미지 파일을 FormData에 추가
+    imageFiles.forEach((file) => {
+      formData.append("files", file);
+    });
 
-    if (initialAuthor) {
-      // Update author
-      await updateAuthor(initialAuthor.id, formData);
-    } else {
-      // Add new author
-      await addAuthor(formData);
+    // FormData 확인 (디버깅용)
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}:`, pair[1]);
     }
+
+    // 에디터 등록 API 호출
+    await addEditor(formData);
 
     onClose();
   };
@@ -97,7 +102,7 @@ const AuthorForm = ({ initialAuthor, onClose }: AuthorFormProps) => {
         <Dialog.Content className="fixed inset-0 flex items-center justify-center p-4 ">
           <div className="bg-white rounded-lg p-6 max-w-lg w-full shadow-lg max-h-screen overflow-y-auto relative">
             <Dialog.Title className="text-lg font-medium mb-4">
-              {initialAuthor ? "프로필 수정" : "새로운 프로필 추가"}
+              {initialEditor ? "에디터 수정" : "새로운 에디터 추가"}
             </Dialog.Title>
             <Dialog.Close asChild>
               <button
@@ -113,13 +118,13 @@ const AuthorForm = ({ initialAuthor, onClose }: AuthorFormProps) => {
                 className="p-2 border rounded-lg w-full"
                 type="text"
                 placeholder="이름"
-                value={authorData.name}
+                value={editorData.editorName}
                 onChange={(e) =>
-                  setAuthorData({ ...authorData, name: e.target.value })
+                  setEditorData({ ...editorData, editorName: e.target.value })
                 }
               />
               <p className="p-0 m-0">
-                기사 하단에 붙이는 프로필이미지[원 모양]
+                기사 하단에 붙이는 프로필 이미지 [원 모양]
               </p>
               <input
                 className="p-2 border rounded-lg w-full"
@@ -142,7 +147,7 @@ const AuthorForm = ({ initialAuthor, onClose }: AuthorFormProps) => {
                   />
                 </div>
               )}
-              <p className="p-0 m-0">에디터 프로필 사진[직사각형]</p>
+              <p className="p-0 m-0">에디터 프로필 사진 [직사각형]</p>
               <input
                 className="p-2 border rounded-lg w-full"
                 type="file"
@@ -168,17 +173,17 @@ const AuthorForm = ({ initialAuthor, onClose }: AuthorFormProps) => {
                 className="p-2 border rounded-lg w-full"
                 type="text"
                 placeholder="소개 문구"
-                value={authorData.introduction}
+                value={editorData.description}
                 onChange={(e) =>
-                  setAuthorData({
-                    ...authorData,
-                    introduction: e.target.value,
+                  setEditorData({
+                    ...editorData,
+                    description: e.target.value,
                   })
                 }
               />
             </div>
             <Button onClick={handleSubmit} className="w-full mb-5 mt-4">
-              {initialAuthor ? "프로필 업데이트" : "프로필 추가"}
+              {initialEditor ? "에디터 업데이트" : "에디터 추가"}
             </Button>
           </div>
         </Dialog.Content>
@@ -187,4 +192,4 @@ const AuthorForm = ({ initialAuthor, onClose }: AuthorFormProps) => {
   );
 };
 
-export default AuthorForm;
+export default EditorForm;

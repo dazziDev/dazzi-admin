@@ -1,6 +1,6 @@
 "use client";
-import AuthorForm from "@/components/authors/authorForm";
-import AuthorList from "@/components/authors/authorList";
+import EditorForm from "@/components/authors/editorForm";
+import EditorList from "@/components/authors/editorList";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -14,13 +14,13 @@ const AuthorPage = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-semibold mb-4">에디터 관리</h1>
-      <AuthorList />
+      <EditorList />
       <div className="mt-8">
         <Button onClick={handleAddNew} className="w-full">
           새 에디터 추가
         </Button>
       </div>
-      {isAdding && <AuthorForm onClose={() => setIsAdding(false)} />}
+      {isAdding && <EditorForm onClose={() => setIsAdding(false)} />}
     </div>
   );
 };

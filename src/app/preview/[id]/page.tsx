@@ -1,12 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useEditorStore } from "@/store/editorStore";
+import { useArticleStore } from "@/store/articleStore";
 import "ckeditor5/ckeditor5.css";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const PreviewPage = () => {
-  const { editorData } = useEditorStore();
+  const { articleData: editorData } = useArticleStore();
   const router = useRouter();
   const uid = useParams().id;
   const [isMobileView, setIsMobileView] = useState(false);

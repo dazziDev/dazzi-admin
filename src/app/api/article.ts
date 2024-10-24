@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 interface SaveContentResponse {
   articleId: number;
@@ -10,18 +10,20 @@ interface SaveContentResponse {
  * @param formData 수정된 콘텐츠와 이미지 파일이 포함된 FormData 객체
  * @returns 백엔드 응답
  */
-export async function saveEditorContent(
+export async function saveArticleContent(
   formData: FormData
 ): Promise<SaveContentResponse> {
-  console.log("formData", formData);
+  for (let pair of formData.entries()) {
+    console.log(`${pair[0]}:`, pair[1]);
+  }
   try {
     // get할때 permalinks endpoint
-    const response = await axiosInstance.post("/article/add", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/add`,
+      formData
+    );
+    console.log("response", response);
+    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to save content:", error);
