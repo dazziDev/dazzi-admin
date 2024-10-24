@@ -1,8 +1,8 @@
 import { Input } from "@/components/ui/input";
-import { useEditorStore } from "@/store/editorStore";
+import { useArticleStore } from "@/store/articleStore";
 
 const PermalinkInput = () => {
-  const { permalink, setPermalink } = useEditorStore();
+  const { permalink, setPermalink } = useArticleStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPermalink(e.target.value);

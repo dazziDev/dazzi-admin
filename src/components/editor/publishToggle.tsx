@@ -1,10 +1,10 @@
 "use client";
-import { useEditorStore } from "@/store/editorStore";
+import { useArticleStore } from "@/store/articleStore";
 
 const PublishToggle = () => {
-  const isPublish = useEditorStore((state) => state.isPublish);
-  const setIsPublish = useEditorStore((state) => state.setIsPublish);
-  const setIsMainPublish = useEditorStore((state) => state.setIsMainPublish);
+  const isPublish = useArticleStore((state) => state.isPublish);
+  const setIsPublish = useArticleStore((state) => state.setIsPublish);
+  const setIsMainPublish = useArticleStore((state) => state.setIsMainPublish);
 
   const handleToggle = () => {
     setIsPublish(!isPublish);

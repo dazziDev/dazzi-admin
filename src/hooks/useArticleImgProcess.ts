@@ -4,10 +4,8 @@
  * @param content 에디터 콘텐츠 (HTML 문자열)
  * @returns 수정된 콘텐츠와 이미지 파일 배열
  */
-//  __IMAGE_PLACEHOLDER_ 백엔드 대화
-//  __IMAGE_PLACEHOLDER_ 백엔드 대화
-//  __IMAGE_PLACEHOLDER_ 백엔드 대화
-export async function processEditorContent(content: string): Promise<{
+
+export async function processArticleContent(content: string): Promise<{
   modifiedContent: string;
   imageFiles: File[];
 }> {

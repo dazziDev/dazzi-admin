@@ -1,8 +1,8 @@
 "use client";
-import { saveEditorContent } from "@/app/api/ediotr";
+import { saveArticleContent } from "@/app/api/article";
 import { editorConfig } from "@/config/editorConfig";
-import { processEditorContent } from "@/hooks/useEditorImgProcess";
-import { useEditorStore } from "@/store/editorStore";
+import { processArticleContent } from "@/hooks/useArticleImgProcess";
+import { useArticleStore } from "@/store/articleStore";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { ClassicEditor } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
@@ -19,10 +19,10 @@ import PublishToggle from "./publishToggle";
 import SubtitleInput from "./subtitleInput";
 import TitleInput from "./titleInput";
 
-const CustomEditor = () => {
-  const editorRef = useRef<ClassicEditor | null>(null);
-  const { editorData, setEditorData, selectedAuthor, isSubmitDisabled } =
-    useEditorStore();
+const CustomArticle = () => {
+  const articleRef = useRef<ClassicEditor | null>(null);
+  const { articleData, setArticleData, selectedEditor, isSubmitDisabled } =
+    useArticleStore();
 
   const router = useRouter();
 
@@ -34,24 +34,24 @@ const CustomEditor = () => {
 
   const handleEditorChange = (event: any, editor: any) => {
     const data = editor.getData();
-    setEditorData(data);
+    setArticleData(data);
   };
 
   useEffect(() => {
-    if (selectedAuthor) {
+    if (selectedEditor) {
       const profileCardHtml = `
         <div class="raw-html-embed w-full">
           <div class="profile-card" style="display: flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin: 10px 0; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <img src="${selectedAuthor.src}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff;">
+            <img src="${selectedEditor.articleImage}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff;">
             <div>
-              <strong style="font-size: 1.1rem; color: #333;">${selectedAuthor.name}</strong>
-              <p style="margin: 5px 0 0; font-size: 0.9rem; color: #666;">${selectedAuthor.introduction}</p>
+              <strong style="font-size: 1.1rem; color: #333;">${selectedEditor.editorName}</strong>
+              <p style="margin: 5px 0 0; font-size: 0.9rem; color: #666;">${selectedEditor.description}</p>
             </div>
           </div>
         </div>
       `;
 
-      setEditorData((prevData) => {
+      setArticleData((prevData) => {
         let newData = prevData;
 
         const profileCardRegex = /<div class="raw-html-embed">[\s\S]*?<\/div>/g;
@@ -63,21 +63,21 @@ const CustomEditor = () => {
         return newData;
       });
     }
-  }, [selectedAuthor, setEditorData]);
+  }, [selectedEditor, setArticleData]);
 
   useEffect(() => {
-    if (editorRef.current && editorData) {
-      if (editorRef.current.getData() !== editorData) {
-        editorRef.current.setData(editorData);
+    if (articleRef.current && articleData) {
+      if (articleRef.current.getData() !== articleData) {
+        articleRef.current.setData(articleData);
       }
     }
-  }, [editorData]);
+  }, [articleData]);
 
   const handleSubmit = async () => {
     try {
       const {
-        editorData,
-        selectedAuthor,
+        articleData,
+        selectedEditor,
         selectedCategories,
         title,
         subtitle,
@@ -85,9 +85,9 @@ const CustomEditor = () => {
         isPublish,
         isMainPublish,
         publishTime,
-      } = useEditorStore.getState();
+      } = useArticleStore.getState();
 
-      if (!selectedAuthor || !selectedCategories[0]) {
+      if (!selectedEditor || !selectedCategories[0]) {
         alert("기사 작성자와 카테고리를 선택해주세요.");
         return;
       }
@@ -97,16 +97,16 @@ const CustomEditor = () => {
       );
 
       // 1. 에디터 콘텐츠 가져오기
-      const content: string = editorData;
+      const content: string = articleData;
 
       // 2. 콘텐츠에서 이미지 처리
-      const { modifiedContent, imageFiles } = await processEditorContent(
+      const { modifiedContent, imageFiles } = await processArticleContent(
         content
       );
 
       // 3. 데이터 객체 생성
       const data = {
-        editorId: selectedAuthor.id,
+        editorId: selectedEditor.editorId,
         categoryId: selectedCategory?.categoryId,
         // categoryId: 1,
         title: title,
@@ -140,7 +140,7 @@ const CustomEditor = () => {
       }
 
       // 5. 백엔드로 데이터 전송
-      const response = await saveEditorContent(formData);
+      const response = await saveArticleContent(formData);
 
       // 통신 성공 후 permalinks로 이동
       // response 없음
@@ -170,7 +170,7 @@ const CustomEditor = () => {
             <CKEditor
               editor={ClassicEditor}
               config={editorConfig}
-              data={editorData}
+              data={articleData}
               onChange={handleEditorChange}
             />
           </div>
@@ -187,4 +187,4 @@ const CustomEditor = () => {
   );
 };
 
-export default CustomEditor;
+export default CustomArticle;

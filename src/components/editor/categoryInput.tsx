@@ -1,13 +1,13 @@
 import { fetchCategories } from "@/app/api/categories";
 import { MultipleSelector, Option } from "@/components/ui/multiSelect";
+import { useArticleStore } from "@/store/articleStore";
 import { useCategoryStore } from "@/store/categoryStore";
-import { useEditorStore } from "@/store/editorStore";
 import { useEffect, useMemo, useState } from "react";
 import AddCategoryModal from "./addCategoryModal";
 
 const CategoryInput = () => {
   const { categoryList, setCategoryList } = useCategoryStore();
-  const { setSelectedCategories } = useEditorStore();
+  const { setSelectedCategories } = useArticleStore();
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +28,7 @@ const CategoryInput = () => {
     initialize();
   }, [setCategoryList]);
 
-  const editorStoreSelectedCategories = useEditorStore(
+  const editorStoreSelectedCategories = useArticleStore(
     (state) => state.selectedCategories
   );
 

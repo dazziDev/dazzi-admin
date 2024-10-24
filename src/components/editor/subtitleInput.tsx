@@ -1,8 +1,8 @@
 import { Input } from "@/components/ui/input";
-import { useEditorStore } from "@/store/editorStore";
+import { useArticleStore } from "@/store/articleStore";
 
 const SubtitleInput = () => {
-  const { subtitle, setSubtitle } = useEditorStore();
+  const { subtitle, setSubtitle } = useArticleStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubtitle(e.target.value);

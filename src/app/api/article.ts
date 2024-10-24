@@ -10,7 +10,7 @@ interface SaveContentResponse {
  * @param formData 수정된 콘텐츠와 이미지 파일이 포함된 FormData 객체
  * @returns 백엔드 응답
  */
-export async function saveEditorContent(
+export async function saveArticleContent(
   formData: FormData
 ): Promise<SaveContentResponse> {
   for (let pair of formData.entries()) {
