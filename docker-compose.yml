@@ -7,12 +7,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
-    # environment:
-    #   NODE_ENV: production
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
     volumes:
       - .:/app
       - /app/node_modules
-    # env_file:
-    #   - .env.production
     command: >
       sh -c "yarn build && yarn start"

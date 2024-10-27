@@ -11,7 +11,7 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user }) {
-      const allowedEmails = (process.env.NEXT_PUBLIC_ALLOWED_EMAILS || "")
+      const allowedEmails = (process.env.ALLOWED_EMAILS || "")
         .split(",")
         .map((email) => email.trim());
       return allowedEmails.includes(user.email || "");
