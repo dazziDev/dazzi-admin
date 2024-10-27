@@ -1,11 +1,11 @@
-import { useEditorStore } from "@/store/editorStore";
+import { useArticleStore } from "@/store/articleStore";
 import { ko } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const PublishTimeInput = () => {
-  const { setPublishTime, setIsSubmitDisabled } = useEditorStore();
+  const { setPublishTime, setIsSubmitDisabled } = useArticleStore();
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [isInvalidTime, setIsInvalidTime] = useState(false);
   const [timeUntilPublish, setTimeUntilPublish] = useState("");
@@ -13,9 +13,7 @@ const PublishTimeInput = () => {
   const handleChange = (date: Date | null) => {
     setStartDate(date);
     if (date) {
-      // yyyymmddhhmm 형식 확인해야함
-      // yyyymmddhhmm 형식 확인해야함
-      // yyyymmddhhmm 형식 확인해야함
+      // TODO :yyyymmddhhmm 형식 확인해야함
       const formattedDate = date
         .toISOString()
         .replace(/[-:]/g, "")
