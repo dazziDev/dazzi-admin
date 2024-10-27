@@ -3,7 +3,7 @@ import { Editor, useEditorStore } from "@/store/editorStore";
 import Image from "next/image";
 import { useEffect } from "react";
 
-const AvatarSelector = () => {
+const EditorSelector = () => {
   const { editors, fetchEditors } = useEditorStore();
   const { selectedEditor, setSelectedEditor } = useArticleStore();
 
@@ -57,4 +57,4 @@ const AvatarSelector = () => {
   );
 };
 
-export default AvatarSelector;
+export default EditorSelector;

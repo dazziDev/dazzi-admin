@@ -17,7 +17,7 @@ const EditorCard = ({ editor }: EditorCardProps) => {
   };
 
   const handleEdit = () => {
-    setIsEditing(true);
+    // setIsEditing(true);
   };
 
   return (
@@ -52,8 +52,10 @@ const EditorCard = ({ editor }: EditorCardProps) => {
         </div>
       )}
       <div className="mt-4 flex justify-center space-x-2">
-        <Button onClick={handleEdit}>수정</Button>
-        <Button variant="destructive" onClick={handleDelete}>
+        <Button disabled onClick={handleEdit}>
+          수정
+        </Button>
+        <Button disabled variant="destructive" onClick={handleDelete}>
           삭제
         </Button>
       </div>

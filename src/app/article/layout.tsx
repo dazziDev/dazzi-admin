@@ -1,4 +1,4 @@
-export default function EditordPageLayout({
+export default function ArticlePageLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -52,7 +52,7 @@ import {
 } from "ckeditor5";
 import translations from "ckeditor5/translations/ko.js";
 
-export const editorConfig: EditorConfig = {
+export const articleConfig: EditorConfig = {
   toolbar: {
     items: [
       "undo",

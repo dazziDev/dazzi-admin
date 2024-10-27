@@ -1,6 +1,6 @@
 "use client";
 import { saveArticleContent } from "@/app/api/article";
-import { editorConfig } from "@/config/editorConfig";
+import { articleConfig } from "@/config/articleConfig";
 import { processArticleContent } from "@/hooks/useArticleImgProcess";
 import { useArticleStore } from "@/store/articleStore";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -8,7 +8,7 @@ import { ClassicEditor } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import AvatarSelector from "../adminAvatar/avatarSelector";
+import AvatarSelector from "../editorAvatar/avatarSelector";
 import { Button } from "../ui/button";
 
 import { useCategoryStore } from "@/store/categoryStore";
@@ -32,8 +32,8 @@ const CustomArticle = () => {
     addCategory: addCategoryToStore,
   } = useCategoryStore();
 
-  const handleEditorChange = (event: any, editor: any) => {
-    const data = editor.getData();
+  const handleArticleChange = (event: any, article: any) => {
+    const data = article.getData();
     setArticleData(data);
   };
 
@@ -169,9 +169,9 @@ const CustomArticle = () => {
           <div className="editor-container__editor">
             <CKEditor
               editor={ClassicEditor}
-              config={editorConfig}
+              config={articleConfig}
               data={articleData}
-              onChange={handleEditorChange}
+              onChange={handleArticleChange}
             />
           </div>
         </div>

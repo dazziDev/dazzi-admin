@@ -33,15 +33,10 @@ const CategoryInput = () => {
   );
 
   const options: Option[] = useMemo(() => {
-    return (
-      [...categoryList]
-        // priority를 겟에서 받아온다면 현재는없음.
-        // .sort((a, b) => a.priority - b.priority) // priority 기준으로 정렬
-        .map((category) => ({
-          label: category.categoryName,
-          value: category.permalink,
-        }))
-    );
+    return [...categoryList].map((category) => ({
+      label: category.categoryName,
+      value: category.permalink,
+    }));
   }, [categoryList]);
 
   useEffect(() => {

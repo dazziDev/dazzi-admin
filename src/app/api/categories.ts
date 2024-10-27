@@ -4,6 +4,7 @@ import axiosInstance from "./axiosInstance";
 // 카테고리 리스트 가져오기
 export const fetchCategories = async (): Promise<Category[]> => {
   const response = await axiosInstance.get("/category/list");
+  console.log("category/list:", response);
   return response.data.data;
 };
 

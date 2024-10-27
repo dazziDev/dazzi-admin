@@ -8,7 +8,9 @@ export interface Editor {
   editorId: string;
   editorName: string;
   description: string;
+  // 기사 작성자 이미지(동그라미)
   articleImage: string;
+  // 에디터 소개 이미지(사각형)
   introduceImage: string;
 }
 

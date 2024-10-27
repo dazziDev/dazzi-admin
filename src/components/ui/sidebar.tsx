@@ -15,7 +15,7 @@ const Sidebar = () => (
       </Button>
     </Link>
 
-    <Link href="/editor">
+    <Link href="/article">
       <Button variant="ghost" className="flex flex-col items-center space-y-2">
         <Edit />
       </Button>
@@ -27,7 +27,7 @@ const Sidebar = () => (
       </Button>
     </Link>
 
-    <Link href="/author">
+    <Link href="/editor">
       <Button variant="ghost" className="flex flex-col items-center space-y-2">
         <UserCogIcon />
       </Button>
