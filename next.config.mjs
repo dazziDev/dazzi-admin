@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -8,6 +9,9 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  env: {
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
 };
 
