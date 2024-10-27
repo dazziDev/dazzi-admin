@@ -1,4 +1,4 @@
-version: "3.8"
+# version: '3.8'
 
 services:
   app:
@@ -8,11 +8,11 @@ services:
     ports:
       - "3001:3001"
     env_file:
-      - .env.${NODE_ENV:-local} # NODE_ENV 값이 없으면 .env.local 파일 사용
+      - .env.production
     environment:
-      NODE_ENV: ${NODE_ENV:-development} # NODE_ENV 기본값을 development로 설정
+      NODE_ENV: production
     volumes:
       - .:/app
       - /app/node_modules
     command: >
-      sh -c "if [ \"$NODE_ENV\" = \"production\" ]; then yarn build && yarn start; else yarn dev; fi"
+      sh -c "yarn build && yarn start"
