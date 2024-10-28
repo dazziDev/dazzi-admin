@@ -108,7 +108,6 @@ const CustomArticle = () => {
       const data = {
         editorId: selectedEditor.editorId,
         categoryId: selectedCategory?.categoryId,
-        // categoryId: 1,
         title: title,
         subtitle: subtitle,
         text: modifiedContent,
@@ -118,12 +117,6 @@ const CustomArticle = () => {
       };
       // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      // TODO: 이미지 사이즈 고정
-      // TODO: 카테고리(등록,선택) API 따로 연동
-      // TODO: 공개여부 체크박스 추가
-      // TODO: 메인공개여부 체크박스 추가
-      // TODO: 썸네일 사진같은경우는 이미지 파일 배열에 0번째로 추가
-      // TODO: 썸네일 사진 따로 받아야함.
 
       formData.append(
         "data",

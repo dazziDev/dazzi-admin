@@ -5,6 +5,8 @@ import axiosInstance from "./axiosInstance";
 export const fetchCategories = async (): Promise<Category[]> => {
   const response = await axiosInstance.get("/category/list");
   console.log("category/list:", response);
+  console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
+
   return response.data.data;
 };
 
