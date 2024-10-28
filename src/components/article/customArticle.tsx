@@ -137,7 +137,7 @@ const CustomArticle = () => {
 
       // 통신 성공 후 permalinks로 이동
       // response 없음
-      router.push(`/preview/${response.permalink}`);
+      // router.push(`/preview/${response.permalink}`);
     } catch (error) {
       console.error("Failed to save content:", error);
       // 에러 처리 로직 추가

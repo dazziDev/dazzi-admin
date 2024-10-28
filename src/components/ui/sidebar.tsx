@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, Home, UserCogIcon } from "lucide-react";
+import { Edit, Home, UserCogIcon } from "lucide-react";
 import Link from "next/link";
 
 const Sidebar = () => (
@@ -21,11 +21,11 @@ const Sidebar = () => (
       </Button>
     </Link>
 
-    <Link href="/preview">
+    {/* <Link href="/preview">
       <Button variant="ghost" className="flex flex-col items-center space-y-2">
         <Eye />
       </Button>
-    </Link>
+    </Link> */}
 
     <Link href="/editor">
       <Button variant="ghost" className="flex flex-col items-center space-y-2">
