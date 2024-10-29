@@ -10,12 +10,11 @@ const agent = new https.Agent({
 // 카테고리 리스트 가져오기
 export const fetchCategories = async (): Promise<Category[]> => {
   try {
-    console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/list`,
-      { httpsAgent: agent }
-    );
-    console.log("category/list:", response);
+    console.log("API URL:무ㅇ?", process.env.NEXT_PUBLIC_API_BASE_URL);
+    const response = await axios.get("/api/v1/admin/category/list", {
+      httpsAgent: agent,
+    });
+    console.log("category/listss:", response);
 
     return response.data.data;
   } catch (error) {
