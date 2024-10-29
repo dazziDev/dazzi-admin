@@ -9,14 +9,19 @@ const agent = new https.Agent({
 
 // 카테고리 리스트 가져오기
 export const fetchCategories = async (): Promise<Category[]> => {
-  console.log("API URL:무엇?", process.env.NEXT_PUBLIC_API_BASE_URL);
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/list`,
-    { httpsAgent: agent }
-  );
-  console.log("category/list:", response);
+  try {
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/category/list`,
+      { httpsAgent: agent }
+    );
+    console.log("category/list:", response);
 
-  return response.data.data;
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error;
+  }
 };
 
 // 카테고리 추가하기
