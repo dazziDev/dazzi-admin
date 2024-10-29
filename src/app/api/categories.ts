@@ -1,4 +1,3 @@
-import axios from "axios";
 import https from "https";
 import { AddCategoryRequest, Category } from "../types/category";
 import axiosInstance from "./axiosInstance";
@@ -10,12 +9,9 @@ const agent = new https.Agent({
 // 카테고리 리스트 가져오기
 export const fetchCategories = async (): Promise<Category[]> => {
   try {
-    console.log("API URL:무ㅇ?", process.env.NEXT_PUBLIC_API_BASE_URL);
-    const response = await axios.get("/api/v1/admin/category/list", {
+    const response = await axiosInstance.get("category/list", {
       httpsAgent: agent,
     });
-    console.log("category/listss:", response);
-
     return response.data.data;
   } catch (error) {
     console.error("Error fetching categories:", error);
