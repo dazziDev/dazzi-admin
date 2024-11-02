@@ -1,5 +1,5 @@
 "use client";
-import { saveArticleContent } from "@/app/api/article";
+import { fetchArticleDetail, saveArticleContent } from "@/app/api/article";
 import { articleConfig } from "@/config/articleConfig";
 import { processArticleContent } from "@/hooks/useArticleImgProcess";
 import { useArticleStore } from "@/store/articleStore";
@@ -84,17 +84,27 @@ const CustomArticle = () => {
         permalink,
         isPublish,
         isMainPublish,
-        publishTime,
+        // publishTime,
       } = useArticleStore.getState();
 
-      if (!selectedEditor || !selectedCategories[0]) {
-        alert("기사 작성자와 카테고리를 선택해주세요.");
+      if (!selectedCategories[0]) {
+        alert("카테고리를 선택해주세요.");
         return;
       }
+
+      if (!selectedEditor.editorId) {
+        alert("기사 작성자를 선택해주세요.");
+      }
+
       const selectedPermalink = selectedCategories[0];
       const selectedCategory = categoryList.find(
         (category) => category.permalink === selectedPermalink
       );
+
+      if (!selectedCategory) {
+        alert("카테고리를 선택해주세요.");
+        return;
+      }
 
       // 1. 에디터 콘텐츠 가져오기
       const content: string = articleData;
@@ -104,40 +114,41 @@ const CustomArticle = () => {
         content
       );
 
-      // 3. 데이터 객체 생성
-      const data = {
-        editorId: selectedEditor.editorId,
-        categoryId: selectedCategory?.categoryId,
-        title: title,
-        subtitle: subtitle,
-        text: modifiedContent,
-        permalink: permalink,
-        isPublish: isPublish,
-        isMainPublish: isMainPublish,
-      };
-      // 4. FormData 생성 및 데이터 추가
+      // 3. FormData 생성 및 데이터 추가
       const formData = new FormData();
-
-      formData.append(
-        "data",
-        new Blob([JSON.stringify(data)], { type: "application/json" })
-      );
+      console.log("selectedEditor.editorId", selectedEditor.editorId);
+      formData.append("editorId", selectedEditor.editorId);
+      formData.append("categoryId", selectedCategory.categoryId.toString());
+      formData.append("title", title);
+      formData.append("subtitle", subtitle);
+      formData.append("text", modifiedContent);
+      formData.append("permalink", permalink);
+      formData.append("isPublish", isPublish.toString());
+      formData.append("isMainPublish", isMainPublish.toString());
 
       imageFiles.forEach((file) => {
         formData.append("imageFiles", file);
       });
-      console.log("formData", formData);
 
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
+      // FormData를 JSON 형태로 출력하기 확인용
+      const formDataEntries: { [key: string]: any } = {};
+      formData.forEach((value, key) => {
+        formDataEntries[key] = value;
+      });
+      console.log(
+        "FormData contents:",
+        JSON.stringify(formDataEntries, null, 2)
+      );
 
       // 5. 백엔드로 데이터 전송
       const response = await saveArticleContent(formData);
-
-      // 통신 성공 후 permalinks로 이동
-      // response 없음
-      // router.push(`/preview/${response.permalink}`);
+      if (response) {
+        const detailResponse = await fetchArticleDetail(response);
+        console.log("detailResponse", detailResponse);
+        router.push(`/preview/${response}`);
+      } else {
+        alert("콘텐츠 저장에 실패했습니다. 다시 시도해주세요.");
+      }
     } catch (error) {
       console.error("Failed to save content:", error);
       // 에러 처리 로직 추가
@@ -146,7 +157,7 @@ const CustomArticle = () => {
   };
 
   return (
-    <div className="relative pb-16 max-w-5xl mx-auto">
+    <div className="relative pb-16 max-w-5xl mx-auto mb-16">
       <AvatarSelector />
       <CategoryInput />
       <TitleInput />
