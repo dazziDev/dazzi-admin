@@ -84,7 +84,7 @@ const CustomArticle = () => {
         permalink,
         isPublish,
         isMainPublish,
-        publishTime,
+        // publishTime,
       } = useArticleStore.getState();
 
       if (!selectedCategories[0]) {
@@ -130,7 +130,7 @@ const CustomArticle = () => {
         formData.append("imageFiles", file);
       });
 
-      // FormData를 JSON 형태로 출력하기
+      // FormData를 JSON 형태로 출력하기 확인용
       const formDataEntries: { [key: string]: any } = {};
       formData.forEach((value, key) => {
         formDataEntries[key] = value;
@@ -142,11 +142,10 @@ const CustomArticle = () => {
 
       // 5. 백엔드로 데이터 전송
       const response = await saveArticleContent(formData);
-      // console.log("data", data);
-      if (response.permalink) {
-        const detailResponse = await fetchArticleDetail(response.permalink);
+      if (response) {
+        const detailResponse = await fetchArticleDetail(response);
         console.log("detailResponse", detailResponse);
-        router.push(`/preview/${response.permalink}`);
+        router.push(`/preview/${response}`);
       } else {
         alert("콘텐츠 저장에 실패했습니다. 다시 시도해주세요.");
       }
