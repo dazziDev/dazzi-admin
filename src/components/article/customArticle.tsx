@@ -1,5 +1,5 @@
 "use client";
-import { saveArticleContent } from "@/app/api/article";
+import { fetchArticleDetail, saveArticleContent } from "@/app/api/article";
 import { articleConfig } from "@/config/articleConfig";
 import { processArticleContent } from "@/hooks/useArticleImgProcess";
 import { useArticleStore } from "@/store/articleStore";
@@ -114,45 +114,42 @@ const CustomArticle = () => {
         content
       );
 
-      // 3. 데이터 객체 생성
-      const data = {
-        editor_id: "979de7d3-d4ed-4c50-9dba-5bcb91deff59",
-        categoryId: selectedCategory.categoryId,
-        title: title,
-        subtitle: subtitle,
-        text: modifiedContent,
-        permalink: permalink,
-        isPublish: isPublish,
-        isMainPublish: isMainPublish,
-      };
-      // 4. FormData 생성 및 데이터 추가
+      // 3. FormData 생성 및 데이터 추가
       const formData = new FormData();
       console.log("selectedEditor.editorId", selectedEditor.editorId);
-      formData.append(
-        "data",
-        new Blob([JSON.stringify(data)], { type: "application/json" })
-      );
-      formData.append("editor_id", "979de7d3-d4ed-4c50-9dba-5bcb91deff59");
+      formData.append("editorId", selectedEditor.editorId);
+      formData.append("categoryId", selectedCategory.categoryId.toString());
+      formData.append("title", title);
+      formData.append("subtitle", subtitle);
+      formData.append("text", modifiedContent);
+      formData.append("permalink", permalink);
+      formData.append("isPublish", isPublish.toString());
+      formData.append("isMainPublish", isMainPublish.toString());
 
       imageFiles.forEach((file) => {
         formData.append("imageFiles", file);
       });
-      console.log("formData", formData);
 
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
+      // FormData를 JSON 형태로 출력하기
+      const formDataEntries: { [key: string]: any } = {};
+      formData.forEach((value, key) => {
+        formDataEntries[key] = value;
+      });
+      console.log(
+        "FormData contents:",
+        JSON.stringify(formDataEntries, null, 2)
+      );
 
       // 5. 백엔드로 데이터 전송
-      await saveArticleContent(formData);
-      console.log("data", data);
-      // if (response.permalink) {
-      //   const detailResponse = await fetchArticleDetail(response.permalink);
-      //   console.log("detailResponse", detailResponse);
-      //   router.push(`/preview/${response.permalink}`);
-      // } else {
-      //   alert("콘텐츠 저장에 실패했습니다. 다시 시도해주세요.");
-      // }
+      const response = await saveArticleContent(formData);
+      // console.log("data", data);
+      if (response.permalink) {
+        const detailResponse = await fetchArticleDetail(response.permalink);
+        console.log("detailResponse", detailResponse);
+        router.push(`/preview/${response.permalink}`);
+      } else {
+        alert("콘텐츠 저장에 실패했습니다. 다시 시도해주세요.");
+      }
     } catch (error) {
       console.error("Failed to save content:", error);
       // 에러 처리 로직 추가

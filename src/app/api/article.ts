@@ -20,6 +20,7 @@ export async function saveArticleContent(
   try {
     // get할때 permalinks endpoint
     const response = await axiosInstance.post("/article/add", formData);
+
     console.log("response", response);
     console.log("response", response.data);
     return response.data;
