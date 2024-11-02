@@ -4,7 +4,7 @@ import { Editor } from "./editorStore";
 interface ArticleStore {
   articleData: string;
   // 여기 에디터는 기사작성자를 의미
-  selectedEditor: Editor | null;
+  selectedEditor: Editor;
   setSelectedEditor: (editor: Editor) => void;
   // 카테고리 같은경우는 카테고리 API로 받아온 데이터를 사용
   // 미구현
@@ -29,7 +29,13 @@ interface ArticleStore {
 
 export const useArticleStore = create<ArticleStore>((set) => ({
   articleData: "",
-  selectedEditor: null,
+  selectedEditor: {
+    editorId: "",
+    editorName: "",
+    description: "",
+    articleImage: "",
+    introduceImage: "",
+  },
   setSelectedEditor: (editor) => set({ selectedEditor: editor }),
   selectedCategories: [],
   title: "",

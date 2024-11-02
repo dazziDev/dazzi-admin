@@ -87,14 +87,24 @@ const CustomArticle = () => {
         publishTime,
       } = useArticleStore.getState();
 
-      if (!selectedEditor || !selectedCategories[0]) {
-        alert("기사 작성자와 카테고리를 선택해주세요.");
+      if (!selectedCategories[0]) {
+        alert("카테고리를 선택해주세요.");
         return;
       }
+
+      if (!selectedEditor.editorId) {
+        alert("기사 작성자를 선택해주세요.");
+      }
+
       const selectedPermalink = selectedCategories[0];
       const selectedCategory = categoryList.find(
         (category) => category.permalink === selectedPermalink
       );
+
+      if (!selectedCategory) {
+        alert("카테고리를 선택해주세요.");
+        return;
+      }
 
       // 1. 에디터 콘텐츠 가져오기
       const content: string = articleData;
@@ -106,8 +116,8 @@ const CustomArticle = () => {
 
       // 3. 데이터 객체 생성
       const data = {
-        editorId: selectedEditor.editorId,
-        categoryId: selectedCategory?.categoryId,
+        editor_id: "979de7d3-d4ed-4c50-9dba-5bcb91deff59",
+        categoryId: selectedCategory.categoryId,
         title: title,
         subtitle: subtitle,
         text: modifiedContent,
@@ -117,11 +127,12 @@ const CustomArticle = () => {
       };
       // 4. FormData 생성 및 데이터 추가
       const formData = new FormData();
-
+      console.log("selectedEditor.editorId", selectedEditor.editorId);
       formData.append(
         "data",
         new Blob([JSON.stringify(data)], { type: "application/json" })
       );
+      formData.append("editor_id", "979de7d3-d4ed-4c50-9dba-5bcb91deff59");
 
       imageFiles.forEach((file) => {
         formData.append("imageFiles", file);
@@ -133,11 +144,15 @@ const CustomArticle = () => {
       }
 
       // 5. 백엔드로 데이터 전송
-      const response = await saveArticleContent(formData);
-
-      // 통신 성공 후 permalinks로 이동
-      // response 없음
-      // router.push(`/preview/${response.permalink}`);
+      await saveArticleContent(formData);
+      console.log("data", data);
+      // if (response.permalink) {
+      //   const detailResponse = await fetchArticleDetail(response.permalink);
+      //   console.log("detailResponse", detailResponse);
+      //   router.push(`/preview/${response.permalink}`);
+      // } else {
+      //   alert("콘텐츠 저장에 실패했습니다. 다시 시도해주세요.");
+      // }
     } catch (error) {
       console.error("Failed to save content:", error);
       // 에러 처리 로직 추가
@@ -146,7 +161,7 @@ const CustomArticle = () => {
   };
 
   return (
-    <div className="relative pb-16 max-w-5xl mx-auto">
+    <div className="relative pb-16 max-w-5xl mx-auto mb-16">
       <AvatarSelector />
       <CategoryInput />
       <TitleInput />

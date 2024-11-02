@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 interface SaveContentResponse {
   articleId: number;
@@ -14,19 +14,28 @@ export async function saveArticleContent(
   formData: FormData
 ): Promise<SaveContentResponse> {
   for (let pair of formData.entries()) {
+    console.log("formData1234", formData);
     console.log(`${pair[0]}:`, pair[1]);
   }
   try {
     // get할때 permalinks endpoint
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/article/add`,
-      formData
-    );
+    const response = await axiosInstance.post("/article/add", formData);
     console.log("response", response);
     console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error("Failed to save content:", error);
+    throw error;
+  }
+}
+
+// detail get할때 permalinks endpoint
+export async function fetchArticleDetail(permalink: string) {
+  try {
+    const response = await axiosInstance.get(`/article/detail/${permalink}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch article detail:", error);
     throw error;
   }
 }
