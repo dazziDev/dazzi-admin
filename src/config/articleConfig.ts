@@ -258,9 +258,8 @@ export const articleConfig: EditorConfig = {
     toolbar: [
       "imageTextAlternative",
       "|",
-      "imageStyle:alignLeft",
       "imageStyle:full",
-      "imageStyle:alignRight",
+      "imageStyle:alignCenter",
       "|",
       "resizeImage:original",
     ],
@@ -276,6 +275,7 @@ export const articleConfig: EditorConfig = {
         "side",
       ],
     },
+
     resizeOptions: [
       {
         name: "resizeImage:original",

@@ -104,13 +104,13 @@ const ThumbnailUpload = () => {
           onClick={() => setAspect(16 / 9)}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          메인 기사 등록 (가로 직사각형)
+          메인 기사용 자르기 (가로 직사각형)
         </Button>
         <Button
           onClick={() => setAspect(122 / 185)}
           className="bg-green-500 text-white px-4 py-2 rounded"
         >
-          보통 기사 등록 (세로형)
+          보통 기사용 자르기 (세로형)
         </Button>
       </div>
 

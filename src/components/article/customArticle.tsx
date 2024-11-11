@@ -16,6 +16,7 @@ import ThumbnailUpload from "../imageUpload/thumbnailUpload";
 import CategoryInput from "./categoryInput";
 import MainPublishToggle from "./mainPublishToggle";
 import PermalinkInput from "./permalinkInput";
+import PublishTimeInput from "./publishTimeInput";
 import PublishToggle from "./publishToggle";
 import SubtitleInput from "./subtitleInput";
 import TitleInput from "./titleInput";
@@ -44,7 +45,7 @@ const CustomArticle = () => {
   };
 
   useEffect(() => {
-    if (selectedEditor) {
+    if (selectedEditor && selectedEditor.editorId) {
       const profileCardHtml = `
         <div class="raw-html-embed w-full">
           <div class="profile-card" style="display: flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin: 16px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -129,7 +130,6 @@ const CustomArticle = () => {
 
       // 3. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      console.log("selectedEditor.editorId", selectedEditor.editorId);
       formData.append("editorId", selectedEditor.editorId);
       formData.append("categoryId", selectedCategory.categoryId.toString());
       formData.append("title", title);
@@ -183,7 +183,7 @@ const CustomArticle = () => {
         <MainPublishToggle />
       </div>
       <ThumbnailUpload />
-      {/* <PublishTimeInput /> */}
+      <PublishTimeInput />
       <div className="main-container">
         <div className="editor-container pb-1 editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar">
           <div className="editor-container__editor">
@@ -200,7 +200,7 @@ const CustomArticle = () => {
           onClick={handleSubmit}
           disabled={isSubmitDisabled}
         >
-          확인
+          기사등록
         </Button>
       </div>
     </div>
