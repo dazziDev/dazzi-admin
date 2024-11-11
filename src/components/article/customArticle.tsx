@@ -12,6 +12,7 @@ import AvatarSelector from "../editorAvatar/avatarSelector";
 import { Button } from "../ui/button";
 
 import { useCategoryStore } from "@/store/categoryStore";
+import ThumbnailUpload from "../imageUpload/thumbnailUpload";
 import CategoryInput from "./categoryInput";
 import MainPublishToggle from "./mainPublishToggle";
 import PermalinkInput from "./permalinkInput";
@@ -21,8 +22,13 @@ import TitleInput from "./titleInput";
 
 const CustomArticle = () => {
   const articleRef = useRef<ClassicEditor | null>(null);
-  const { articleData, setArticleData, selectedEditor, isSubmitDisabled } =
-    useArticleStore();
+  const {
+    articleData,
+    setArticleData,
+    selectedEditor,
+    isSubmitDisabled,
+    thumbnail,
+  } = useArticleStore();
 
   const router = useRouter();
 
@@ -41,7 +47,7 @@ const CustomArticle = () => {
     if (selectedEditor) {
       const profileCardHtml = `
         <div class="raw-html-embed w-full">
-          <div class="profile-card" style="display: flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin: 10px 0; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+          <div class="profile-card" style="display: flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin: 16px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             <img src="${selectedEditor.articleImage}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff;">
             <div>
               <strong style="font-size: 1.1rem; color: #333;">${selectedEditor.editorName}</strong>
@@ -96,6 +102,11 @@ const CustomArticle = () => {
         alert("기사 작성자를 선택해주세요.");
       }
 
+      if (!thumbnail) {
+        alert("썸네일을 추가해주세요.");
+        return;
+      }
+
       const selectedPermalink = selectedCategories[0];
       const selectedCategory = categoryList.find(
         (category) => category.permalink === selectedPermalink
@@ -110,8 +121,10 @@ const CustomArticle = () => {
       const content: string = articleData;
 
       // 2. 콘텐츠에서 이미지 처리
+      // 썸네일 이미지를 맨 앞에 추가
       const { modifiedContent, imageFiles } = await processArticleContent(
-        content
+        content,
+        thumbnail
       );
 
       // 3. FormData 생성 및 데이터 추가
@@ -126,8 +139,10 @@ const CustomArticle = () => {
       formData.append("isPublish", isPublish.toString());
       formData.append("isMainPublish", isMainPublish.toString());
 
-      imageFiles.forEach((file) => {
-        formData.append("imageFiles", file);
+      imageFiles.forEach((file, index) => {
+        formData.append("files", file);
+        // 디버그용
+        console.log(`Image File ${index}:`, file.name);
       });
 
       // FormData를 JSON 형태로 출력하기 확인용
@@ -167,6 +182,7 @@ const CustomArticle = () => {
         <PublishToggle />
         <MainPublishToggle />
       </div>
+      <ThumbnailUpload />
       {/* <PublishTimeInput /> */}
       <div className="main-container">
         <div className="editor-container pb-1 editor-container_classic-editor editor-container_include-style editor-container_include-block-toolbar">
