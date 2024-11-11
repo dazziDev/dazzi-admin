@@ -25,7 +25,9 @@ const PreviewPage = () => {
         <Button onClick={toggleViewMode}>
           {!isMobileView ? "Mobile" : "PC"}
         </Button>
-        <Button onClick={handleEdit}>수정하기</Button>
+        <Button disabled onClick={handleEdit}>
+          수정하기
+        </Button>
       </div>
       <p>({uid})</p>
       <h1 className="pb-10 text-2xl font-bold">Preview</h1>
