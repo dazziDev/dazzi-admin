@@ -26,7 +26,7 @@ interface ArticleStore {
   setPublishTime: (publishTime: string | undefined) => void;
   setIsPublish: (publish: boolean) => void;
   setIsMainPublish: (mainPublish: boolean) => void;
-  setThumbnail: (image: string) => void;
+  setThumbnail: (image: string | null) => void;
 }
 
 export const useArticleStore = create<ArticleStore>((set) => ({
