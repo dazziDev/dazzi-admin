@@ -1,12 +1,9 @@
 import { Editor } from "@/store/editorStore";
-import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
 // 모든 에디터 가져오기
 export const fetchEditors = async (): Promise<Editor[]> => {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/editor/list`
-  );
+  const response = await axiosInstance.get("/editor/list");
 
   console.log("fetchEditors", response);
 

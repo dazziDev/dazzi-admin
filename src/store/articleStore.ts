@@ -16,6 +16,7 @@ interface ArticleStore {
   isSubmitDisabled: boolean;
   isPublish: boolean;
   isMainPublish: boolean;
+  thumbnail: string | null;
   setIsSubmitDisabled: (disabled: boolean) => void;
   setArticleData: (data: string | ((prevData: string) => string)) => void;
   setSelectedCategories: (categories: string[]) => void;
@@ -25,6 +26,7 @@ interface ArticleStore {
   setPublishTime: (publishTime: string | undefined) => void;
   setIsPublish: (publish: boolean) => void;
   setIsMainPublish: (mainPublish: boolean) => void;
+  setThumbnail: (image: string | null) => void;
 }
 
 export const useArticleStore = create<ArticleStore>((set) => ({
@@ -45,6 +47,7 @@ export const useArticleStore = create<ArticleStore>((set) => ({
   isSubmitDisabled: false,
   isPublish: true,
   isMainPublish: false,
+  thumbnail: null,
   setIsSubmitDisabled: (disabled) => set({ isSubmitDisabled: disabled }),
   setArticleData: (data) =>
     set((state) => ({
@@ -58,4 +61,5 @@ export const useArticleStore = create<ArticleStore>((set) => ({
   setPublishTime: (publishTime) => set({ publishTime }),
   setIsPublish: (publish) => set({ isPublish: publish }),
   setIsMainPublish: (mainPublish) => set({ isMainPublish: mainPublish }),
+  setThumbnail: (image) => set({ thumbnail: image }),
 }));
