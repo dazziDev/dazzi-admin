@@ -25,6 +25,7 @@
     "react-avatar-editor": "^13.0.2",
     "react-datepicker": "^7.3.0",
     "react-dom": "^19.0.0-rc-fa6eab58-20240815",
+    "react-dropzone": "^14.3.5",
     "react-image-crop": "^11.0.7",
     "shadcn-ui": "^0.8.0",
     "tailwind-merge": "^2.4.0",

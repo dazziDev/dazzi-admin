@@ -47,12 +47,14 @@ const CustomArticle = () => {
   useEffect(() => {
     if (selectedEditor && selectedEditor.editorId) {
       const profileCardHtml = `
-        <div class="raw-html-embed w-full">
-          <div class="profile-card" style="display: flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin: 16px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <img src="${selectedEditor.articleImage}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff;">
-            <div>
-              <strong style="font-size: 1.1rem; color: #333;">${selectedEditor.editorName}</strong>
-              <p style="margin: 5px 0 0; font-size: 0.9rem; color: #666;">${selectedEditor.description}</p>
+        <div class="raw-html-embed">
+          <div class="flex justify-center">
+            <div class="profile-card flex" style="width:80%; display:flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin-top: 32px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              <img src="${selectedEditor.articleImage}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff;">
+              <div>
+                <strong style="font-size: 1.1rem; color: #333;">${selectedEditor.editorName}</strong>
+                <p style="margin: 5px 0 0; font-size: 0.9rem; color: #666;">${selectedEditor.description}</p>
+              </div>
             </div>
           </div>
         </div>
