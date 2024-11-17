@@ -193,69 +193,6 @@
 }
 
 @font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 100;
-  src: url("/fonts/notosans/NotoSansJP-Thin.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 200;
-  src: url("/fonts/notosans/NotoSansJP-ExtraLight.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 300;
-  src: url("/fonts/notosans/NotoSansJP-Light.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 400;
-  src: url("/fonts/notosans/NotoSansJP-Regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 500;
-  src: url("/fonts/notosans/NotoSansJP-Medium.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 600;
-  src: url("/fonts/notosans/NotoSansJP-SemiBold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 700;
-  src: url("/fonts/notosans/NotoSansJP-Bold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 800;
-  src: url("/fonts/notosans/NotoSansJP-ExtraBold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Noto Sans JP";
-  font-style: normal;
-  font-weight: 900;
-  src: url("/fonts/notosans/NotoSansJP-Black.woff2") format("woff2");
-}
-
-@font-face {
   font-family: "LINE Seed KR";
   src: url("/fonts/lineseedkr/LINESeedKR-Th.woff2") format("woff2");
   font-weight: 100;

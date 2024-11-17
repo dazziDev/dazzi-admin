@@ -176,7 +176,6 @@ export const articleConfig: EditorConfig = {
       "HS산토끼체",
       "제주돌담체",
       "망고보드 또박체",
-      "Noto Sans JP",
       "Arial, sans-serif",
       "Courier New, monospace",
       "Georgia, serif",
