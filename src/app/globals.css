@@ -61,10 +61,11 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
   @font-face {
     font-style: normal;
@@ -73,3 +74,17 @@
 
 @import "../styles/fonts.css";
 @import "../styles/editor.css";
+
+/* 스크롤바 숨기기 유틸리티 클래스 */
+@layer utilities {
+  /* Chrome, Safari, Edge */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
-import FooterBar from "@/components/ui/footerBar";
 import Header from "@/components/ui/header";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import Sidebar from "@/components/ui/sidebar";
 import { SessionProvider, useSession } from "next-auth/react";
 import { Inter } from "next/font/google";
@@ -34,7 +34,11 @@ export default function RootLayout({
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
 
-  if (status === "loading") return <p>로딩 중...</p>;
+  if (status === "loading") return (
+    <div className="flex justify-center items-center min-h-screen">
+      <LoadingSpinner size="lg" />
+    </div>
+  );
   if (status === "unauthenticated")
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -45,9 +49,8 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <main className="flex-1 p-4 ml-16">{children}</main>
-        <FooterBar />
+      <div className="flex-1">
+        <main className="p-4 ml-16">{children}</main>
       </div>
     </div>
   );

@@ -13,11 +13,8 @@ const PublishTimeInput = () => {
   const handleChange = (date: Date | null) => {
     setStartDate(date);
     if (date) {
-      // TODO :yyyymmddhhmm 형식 확인해야함
-      const formattedDate = date
-        .toISOString()
-        .replace(/[-:]/g, "")
-        .slice(0, 12);
+      // ISO 형식으로 백엔드에 전송 (백엔드에서 Date로 파싱)
+      const formattedDate = date.toISOString();
       setPublishTime(formattedDate);
     } else {
       // 즉시 공개라는 의미임(undefined)

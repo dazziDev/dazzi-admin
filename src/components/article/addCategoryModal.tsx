@@ -8,9 +8,10 @@ import { useState } from "react";
 
 interface AddCategoryModalProps {
   onClose: () => void;
+  onSuccess?: (permalink: string) => void;
 }
 
-const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
+const AddCategoryModal = ({ onClose, onSuccess }: AddCategoryModalProps) => {
   const {
     categoryList,
     setCategoryList,
@@ -47,6 +48,12 @@ const AddCategoryModal = ({ onClose }: AddCategoryModalProps) => {
       // 카테고리 리스트 재조회 후 상태 업데이트
       const updatedCategories = await fetchCategories();
       setCategoryList(updatedCategories); // 상태 업데이트
+      
+      // 성공 콜백 호출 (새로 추가된 카테고리의 permalink 전달)
+      if (onSuccess) {
+        onSuccess(permalink);
+      }
+      
       onClose();
     } catch (err: any) {
       if (err.response) {
