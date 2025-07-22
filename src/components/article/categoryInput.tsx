@@ -1,4 +1,5 @@
 import { fetchCategories } from "@/app/api/categories";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import { MultipleSelector, Option } from "@/components/ui/multiSelect";
 import { useArticleStore } from "@/store/articleStore";
 import { useCategoryStore } from "@/store/categoryStore";
@@ -66,9 +67,25 @@ const CategoryInput = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  
+  const handleCategoryAddSuccess = (permalink: string) => {
+    // 새로 추가된 카테고리를 자동으로 선택
+    setSelectedCategories([permalink]);
+    
+    // options가 업데이트되면 selectedOptions도 업데이트됨 (useEffect를 통해)
+  };
 
   if (isLoading) {
-    return <p className="text-gray-500">카테고리 로딩 중...</p>;
+    return (
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          카테고리
+        </label>
+        <div className="flex justify-center py-4">
+          <LoadingSpinner size="sm" />
+        </div>
+      </div>
+    );
   }
 
   if (error) {
@@ -101,7 +118,7 @@ const CategoryInput = () => {
       <p className="text-sm text-gray-500 mt-1">
         작성할 기사가 속할(한) 카테고리를 선택(추가)하세요.
       </p>
-      {isModalOpen && <AddCategoryModal onClose={closeModal} />}
+      {isModalOpen && <AddCategoryModal onClose={closeModal} onSuccess={handleCategoryAddSuccess} />}
     </div>
   );
 };

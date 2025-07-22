@@ -3,6 +3,8 @@ import { Editor } from "./editorStore";
 
 interface ArticleStore {
   articleData: string;
+  // 미리보기용 고정 콘텐츠 (무한 요청 방지)
+  previewContent: string | null;
   // 여기 에디터는 기사작성자를 의미
   selectedEditor: Editor;
   setSelectedEditor: (editor: Editor) => void;
@@ -19,6 +21,7 @@ interface ArticleStore {
   thumbnail: string | null;
   setIsSubmitDisabled: (disabled: boolean) => void;
   setArticleData: (data: string | ((prevData: string) => string)) => void;
+  setPreviewContent: (content: string | null) => void;
   setSelectedCategories: (categories: string[]) => void;
   setTitle: (title: string) => void;
   setSubtitle: (subtitle: string) => void;
@@ -31,6 +34,7 @@ interface ArticleStore {
 
 export const useArticleStore = create<ArticleStore>((set) => ({
   articleData: "",
+  previewContent: null,
   selectedEditor: {
     editorId: "",
     editorName: "",
@@ -43,7 +47,7 @@ export const useArticleStore = create<ArticleStore>((set) => ({
   title: "",
   subtitle: "",
   permalink: "",
-  publishTime: "",
+  publishTime: undefined,
   isSubmitDisabled: false,
   isPublish: true,
   isMainPublish: false,
@@ -53,6 +57,7 @@ export const useArticleStore = create<ArticleStore>((set) => ({
     set((state) => ({
       articleData: typeof data === "function" ? data(state.articleData) : data,
     })),
+  setPreviewContent: (content) => set({ previewContent: content }),
   setSelectedCategories: (categories) =>
     set({ selectedCategories: categories }),
   setTitle: (title) => set({ title }),

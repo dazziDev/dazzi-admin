@@ -26,3 +26,112 @@
   font-size: 0.75em !important;
   font-weight: bold !important;
 }
+
+/* 이미지 정렬 및 텍스트 래핑 스타일 */
+.ck-content .image {
+  display: table;
+  clear: both;
+}
+
+.ck-content .image > figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  word-break: break-word;
+  color: hsl(0, 0%, 20%);
+  background-color: hsl(0, 0%, 97%);
+  padding: 0.6em;
+  font-size: 0.75em;
+  outline-offset: -1px;
+}
+
+/* 인라인 이미지 - 텍스트와 같은 줄에 배치 */
+.ck-content .image-inline {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* 왼쪽 정렬 - 텍스트가 오른쪽으로 래핑 */
+.ck-content .image-style-align-left {
+  float: left;
+  margin-right: 1.5em;
+  margin-bottom: 1em;
+  max-width: 50%;
+}
+
+/* 오른쪽 정렬 - 텍스트가 왼쪽으로 래핑 */
+.ck-content .image-style-align-right {
+  float: right;
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+  max-width: 50%;
+}
+
+/* 중앙 정렬 */
+.ck-content .image-style-align-center {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/* 블록 왼쪽 정렬 */
+.ck-content .image-style-align-block-left {
+  max-width: calc(100% - 1.5em);
+  margin-right: 1.5em;
+  margin-bottom: 1em;
+}
+
+/* 블록 오른쪽 정렬 */
+.ck-content .image-style-align-block-right {
+  max-width: calc(100% - 1.5em);
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+/* 블록 이미지 - 전체 너비 */
+.ck-content .image-style-block-align-left,
+.ck-content .image-style-block-align-center,
+.ck-content .image-style-block-align-right {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* 사이드 이미지 */
+.ck-content .image-style-side {
+  float: right;
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+  max-width: 50%;
+  clear: right;
+}
+
+/* float 해제를 위한 clearfix */
+.ck-content::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* 이미지 내 텍스트 래핑 개선 */
+.ck-content p {
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+
+/* 이미지 주변 텍스트 스타일링 */
+.ck-content .image + p,
+.ck-content p + .image {
+  margin-top: 1em;
+}
+
+/* 이미지 로딩 최적화 */
+.ck-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 에디터 프로필 이미지 최적화 */
+.raw-html-embed img {
+  object-fit: cover;
+  flex-shrink: 0;
+}

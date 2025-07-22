@@ -3,11 +3,13 @@
  * 또한 콘텐츠 내의 이미지 src를 플레이스홀더로 대체합니다.
  * @param content 에디터 콘텐츠 (HTML 문자열)
  * @param thumbnailUrl 썸네일 이미지의 URL (옵션)
+ * @param isEditMode 수정 모드 여부
  * @returns 수정된 콘텐츠와 이미지 파일 배열
  */
 export async function processArticleContent(
   content: string,
-  thumbnailUrl?: string
+  thumbnailUrl?: string,
+  isEditMode = false
 ): Promise<{
   modifiedContent: string;
   imageFiles: File[];
@@ -18,13 +20,17 @@ export async function processArticleContent(
   const imageFiles: File[] = [];
   let modifiedContent = content;
 
-  // 1. 썸네일 이미지를 맨 앞에 추가
-  if (thumbnailUrl) {
-    const thumbnailBlob = await fetch(thumbnailUrl).then((res) => res.blob());
-    const thumbnailFile = new File([thumbnailBlob], "image_0.jpg", {
-      type: "image/jpeg",
-    });
-    imageFiles.push(thumbnailFile);
+  // 1. 썸네일 이미지 처리 (수정 모드에서는 S3 URL fetch 하지 않음)
+  if (thumbnailUrl && !isEditMode) {
+    try {
+      const thumbnailBlob = await fetch(thumbnailUrl).then((res) => res.blob());
+      const thumbnailFile = new File([thumbnailBlob], "image_0.jpg", {
+        type: "image/jpeg",
+      });
+      imageFiles.push(thumbnailFile);
+    } catch (error) {
+      console.warn("썸네일 이미지 fetch 실패:", error);
+    }
   }
 
   // 2. 에디터 내 이미지 처리 (index를 1부터 시작)

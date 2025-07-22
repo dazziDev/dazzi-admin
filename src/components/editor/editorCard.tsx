@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Editor } from "@/store/editorStore";
+import { Editor, useEditorStore } from "@/store/editorStore";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 import EditorForm from "./editorForm";
@@ -9,15 +10,35 @@ interface EditorCardProps {
 }
 
 const EditorCard = ({ editor }: EditorCardProps) => {
-  // const { deleteEditor } = useEditorStore();
+  const editorStore = useEditorStore();
+  const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
 
+  // 현재 사용자가 이 에디터의 작성자인지 확인
+  // createdBy가 없는 기존 에디터들은 모든 사용자가 수정 가능
+  const canEdit = !editor.createdBy || session?.user?.email === editor.createdBy;
+  
+  // 디버깅 로그
+  console.log('현재 세션 이메일:', session?.user?.email);
+  console.log('에디터 작성자:', editor.createdBy);
+  console.log('수정 가능 여부:', canEdit);
+
   const handleDelete = async () => {
-    // await deleteEditor(editor.editorId);
+    if (!canEdit) return;
+    
+    if (confirm('정말로 이 에디터를 삭제하시겠습니까?')) {
+      try {
+        await (editorStore as any).deleteEditor(editor.editorId);
+      } catch (error) {
+        console.error('에디터 삭제 실패:', error);
+        alert('에디터 삭제에 실패했습니다.');
+      }
+    }
   };
 
   const handleEdit = () => {
-    // setIsEditing(true);
+    if (!canEdit) return;
+    setIsEditing(true);
   };
 
   return (
@@ -33,6 +54,11 @@ const EditorCard = ({ editor }: EditorCardProps) => {
         {editor.editorName}
       </h2>
       <p className="text-center text-gray-600">{editor.description}</p>
+      {editor.createdBy && (
+        <p className="text-xs text-gray-400 text-center mt-1">
+          작성자: {editor.createdBy}
+        </p>
+      )}
       <div className="mt-4 text-center">프로필 이미지↓</div>
       {editor.introduceImage && (
         <div className="mt-4">
@@ -52,10 +78,19 @@ const EditorCard = ({ editor }: EditorCardProps) => {
         </div>
       )}
       <div className="mt-4 flex justify-center space-x-2">
-        <Button disabled onClick={handleEdit}>
+        <Button 
+          disabled={!canEdit} 
+          onClick={handleEdit}
+          className={!canEdit ? "opacity-50 cursor-not-allowed" : ""}
+        >
           수정
         </Button>
-        <Button disabled variant="destructive" onClick={handleDelete}>
+        <Button 
+          disabled={!canEdit} 
+          variant="destructive" 
+          onClick={handleDelete}
+          className={!canEdit ? "opacity-50 cursor-not-allowed" : ""}
+        >
           삭제
         </Button>
       </div>
