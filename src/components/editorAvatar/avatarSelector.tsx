@@ -45,13 +45,15 @@ const AuthorSelector = () => {
     const profileCardHtml = `
       <div class="raw-html-embed">
         <div class="flex justify-center">
-          <div class="profile-card flex" style="width:80%; display:flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin-top: 32px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <img src="${selectedEditor.articleImage}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff; loading: lazy;">
-            <div>
-              <strong style="font-size: 1.1rem; color: #333;">${selectedEditor.editorName}</strong>
-              <p style="margin: 5px 0 0; font-size: 0.9rem; color: #666;">${selectedEditor.description}</p>
+          <a href="${process.env.NEXT_PUBLIC_FRONTEND_URL}/editors/${selectedEditor.editorId}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+            <div class="profile-card flex" style="width:80%; display:flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin-top: 32px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer; transition: all 0.3s ease;">
+              <img src="${selectedEditor.articleImage}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff; loading: lazy;">
+              <div>
+                <strong style="font-size: 1.1rem; color: #333;">${selectedEditor.editorName}</strong>
+                <p style="margin: 5px 0 0; font-size: 0.9rem; color: #666;">${selectedEditor.description}</p>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     `;
