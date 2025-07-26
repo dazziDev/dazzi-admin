@@ -3,6 +3,7 @@ import { Editor, useEditorStore } from "@/store/editorStore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import { handleImageError } from "@/lib/imageUtils";
 import EditorForm from "./editorForm";
 
 interface EditorCardProps {
@@ -49,9 +50,18 @@ const EditorCard = ({ editor }: EditorCardProps) => {
         width={100}
         height={100}
         className="rounded-full mx-auto"
+        onError={handleImageError}
+        unoptimized={editor.articleImage.includes('amazonaws.com')}
       />
       <h2 className="mt-2 text-center font-semibold text-lg">
-        {editor.editorName}
+        <a 
+          href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}/editors/${editor.editorId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-blue-600 transition-colors cursor-pointer"
+        >
+          {editor.editorName}
+        </a>
       </h2>
       <p className="text-center text-gray-600">{editor.description}</p>
       {editor.createdBy && (
@@ -74,6 +84,8 @@ const EditorCard = ({ editor }: EditorCardProps) => {
               borderRadius: "12px",
               objectFit: "cover",
             }}
+            onError={handleImageError}
+            unoptimized={editor.introduceImage.includes('amazonaws.com')}
           />
         </div>
       )}

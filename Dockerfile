@@ -31,10 +31,10 @@ COPY --from=builder /app/package.json ./package.json
 
 # 10. 환경 변수 설정 (Optional)
 ENV NODE_ENV=production
-ENV PORT=3001
+ENV PORT=3000
 
 # 11. 포트 노출
-EXPOSE 3001
+EXPOSE 3000
 
 # 12. Next.js 애플리케이션 실행
 CMD ["yarn", "start"]
