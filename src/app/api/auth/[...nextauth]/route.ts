@@ -2,15 +2,21 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 // 환境변수 검증 및 로그 출력
-console.log("=== NextAuth Environment Variables ===");
+console.log("=== All Admin Environment Variables ===");
+console.log("NEXT_PUBLIC_API_BASE_URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
+console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+console.log("ALLOWED_EMAILS:", process.env.ALLOWED_EMAILS);
+console.log("NEXTAUTH_DEBUG:", process.env.NEXTAUTH_DEBUG);
+console.log("NODE_ENV:", process.env.NODE_ENV);
 console.log("NEXT_PUBLIC_GOOGLE_CLIENT_ID:", process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+console.log("NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
 console.log("GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET);
 console.log("GOOGLE_CLIENT_SECRET length:", process.env.GOOGLE_CLIENT_SECRET?.length || 0);
-console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
-console.log("NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
-console.log("ALLOWED_EMAILS:", process.env.ALLOWED_EMAILS);
-console.log("NODE_ENV:", process.env.NODE_ENV);
-console.log("=====================================");
+console.log("NEXT_PUBLIC_FRONTEND_URL:", process.env.NEXT_PUBLIC_FRONTEND_URL);
+console.log("PORT:", process.env.PORT);
+console.log("BACKEND_API_URL:", process.env.BACKEND_API_URL);
+console.log("NEXT_PUBLIC_BACKEND_URL:", process.env.NEXT_PUBLIC_BACKEND_URL);
+console.log("========================================");
 
 // Google login
 const handler = NextAuth({
