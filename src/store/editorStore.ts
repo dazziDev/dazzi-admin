@@ -16,6 +16,12 @@ export interface Editor {
   introduceImage: string;
   // 작성자 이메일 (권한 확인용)
   createdBy?: string;
+  // SNS 링크들
+  instagramUrl?: string;
+  youtubeUrl?: string;
+  xUrl?: string;
+  linkedinUrl?: string;
+  websiteUrl?: string;
 }
 
 interface EditorStore {

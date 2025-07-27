@@ -1,12 +1,12 @@
 "use client";
+import axiosInstance from "@/app/api/axiosInstance";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useArticleStore } from "@/store/articleStore";
 import "ckeditor5/ckeditor5.css";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import axiosInstance from "@/app/api/axiosInstance";
+import { useEffect, useState } from "react";
 
 interface ArticleDetail {
   id: number;
@@ -31,7 +31,9 @@ const PreviewPage = () => {
   const params = useParams();
   const permalink = Array.isArray(params.id) ? params.id[0] : params.id;
   const [isMobileView, setIsMobileView] = useState(false);
-  const [articleDetail, setArticleDetail] = useState<ArticleDetail | null>(null);
+  const [articleDetail, setArticleDetail] = useState<ArticleDetail | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [userEditorNames, setUserEditorNames] = useState<string[]>([]);
 
@@ -45,10 +47,13 @@ const PreviewPage = () => {
   // 기사 수정 권한 체크 함수
   const canEditArticle = (): boolean => {
     if (!articleDetail) return false;
-    
+
     // 1. 현재 로그인한 사용자 이름과 일치하거나
     // 2. 현재 사용자가 생성한 에디터 이름과 일치하는지 확인
-    return currentUserName === articleDetail.editorName || userEditorNames.includes(articleDetail.editorName);
+    return (
+      currentUserName === articleDetail.editorName ||
+      userEditorNames.includes(articleDetail.editorName)
+    );
   };
 
   // 사용자가 생성한 에디터 이름들 가져오기
@@ -57,9 +62,15 @@ const PreviewPage = () => {
       const response = await axiosInstance.get("/editor/list");
       const editors = response.data.data || response.data || [];
       const myEditorNames = editors
-        .filter((editor: { createdBy: string; editorName: string }) => editor.createdBy === currentUserEmail)
-        .map((editor: { createdBy: string; editorName: string }) => editor.editorName);
-        
+        .filter(
+          (editor: { createdBy: string; editorName: string }) =>
+            editor.createdBy === currentUserEmail
+        )
+        .map(
+          (editor: { createdBy: string; editorName: string }) =>
+            editor.editorName
+        );
+
       setUserEditorNames(myEditorNames);
     } catch (error) {
       console.error("에디터 목록 가져오기 실패:", error);
@@ -69,23 +80,28 @@ const PreviewPage = () => {
   useEffect(() => {
     const fetchArticleDetail = async () => {
       try {
-        const response = await axiosInstance.get(`/article/detail/${permalink}`);
+        const response = await axiosInstance.get(
+          `/article/detail/${permalink}`
+        );
         const articleData = response.data.data;
-        
+
         // 플레이스홀더를 실제 S3 URL로 복원
         if (articleData.imageUrl && articleData.text) {
           let restoredContent = articleData.text;
-          
+
           // 이미지 URL 파싱
           let imageUrlString = articleData.imageUrl;
-          if (imageUrlString.startsWith('[') && imageUrlString.endsWith(']')) {
+          if (imageUrlString.startsWith("[") && imageUrlString.endsWith("]")) {
             imageUrlString = imageUrlString.slice(1, -1);
           }
-          
-          const imageUrls: string[] = imageUrlString.split(',').map((url: string) => 
-            url.trim().replace(/"/g, '').replace(/'/g, '')
-          ).filter((url: string) => url.length > 0);
-          
+
+          const imageUrls: string[] = imageUrlString
+            .split(",")
+            .map((url: string) =>
+              url.trim().replace(/"/g, "").replace(/'/g, "")
+            )
+            .filter((url: string) => url.length > 0);
+
           // 플레이스홀더를 실제 이미지 URL로 교체 (썸네일은 제외하고 에디터 이미지만)
           if (imageUrls.length > 1) {
             imageUrls.slice(1).forEach((url: string, index: number) => {
@@ -93,11 +109,11 @@ const PreviewPage = () => {
               restoredContent = restoredContent.replace(placeholder, url);
             });
           }
-          
+
           // 복원된 콘텐츠로 업데이트
           articleData.text = restoredContent;
         }
-        
+
         setArticleDetail(articleData);
       } catch (error) {
         console.error("기사 상세 정보를 가져오는데 실패했습니다:", error);
@@ -144,7 +160,10 @@ const PreviewPage = () => {
             {articleDetail?.title || "기사 미리보기"}
           </h1>
           <p className="text-gray-600 mt-1">
-            Permalink: <span className="font-mono bg-gray-100 px-2 py-1 rounded">{decodedPermalink}</span>
+            Permalink:{" "}
+            <span className="font-mono bg-gray-100 px-2 py-1 rounded">
+              {decodedPermalink}
+            </span>
           </p>
           {articleDetail?.subtitle && (
             <p className="text-gray-700 mt-2">{articleDetail.subtitle}</p>
@@ -158,9 +177,7 @@ const PreviewPage = () => {
             {!isMobileView ? "📱 모바일" : "💻 PC"}
           </Button>
           {canEditArticle() ? (
-            <Button onClick={handleEdit}>
-              ✏️ 수정하기
-            </Button>
+            <Button onClick={handleEdit}>✏️ 수정하기</Button>
           ) : (
             <span className="text-sm text-gray-400 px-2">
               작성자만 수정 가능
@@ -168,26 +185,28 @@ const PreviewPage = () => {
           )}
         </div>
       </div>
-      
+
       <div className="border-b-2 border-gray-200 mb-6"></div>
 
       {!isMobileView ? (
         <div className="flex justify-center">
           <div className="relative w-[375px] h-[812px] bg-black rounded-[40px] overflow-hidden shadow-lg border-8 border-black">
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[210px] h-[30px] bg-black rounded-b-[15px]"></div>
-            <div className="absolute top-[40px] bottom-[40px] left-0 right-0 bg-white overflow-y-auto p-4">
-              <div
-                className="ck-content text-sm"
-                dangerouslySetInnerHTML={{ __html: contentToShow }}
-              />
+            <div className="absolute top-[40px] bottom-[40px] left-0 right-0 bg-white overflow-y-auto">
+              <div className="p-3">
+                <div
+                  className="ck-content text-sm max-w-full overflow-hidden mobile-frame"
+                  dangerouslySetInnerHTML={{ __html: contentToShow }}
+                />
+              </div>
             </div>
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[130px] h-[5px] bg-gray-400 rounded-full"></div>
           </div>
         </div>
       ) : (
-        <div className="max-w-none">
+        <div className="max-w-4xl mx-auto px-4">
           <div
-            className="ck-content"
+            className="ck-content max-w-none w-full overflow-hidden pc-view"
             dangerouslySetInnerHTML={{ __html: contentToShow }}
           />
         </div>

@@ -44,10 +44,77 @@
   outline-offset: -1px;
 }
 
-/* 인라인 이미지 - 텍스트와 같은 줄에 배치 */
-.ck-content .image-inline {
-  display: inline-block;
-  max-width: 100%;
+/* 기본 인라인 이미지 스타일 - 리사이즈 되지 않은 상태 */
+.ck.ck-editor__editable .image-inline:not([style*="width"]),
+.ck.ck-editor__editable .image.image-inline:not([style*="width"]),
+.ck.ck-editor__editable figure.image.image-inline:not([style*="width"]) {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin: 0 0.5em !important;
+  max-width: 200px; /* 기본 최대 크기 */
+}
+
+.ck.ck-editor__editable .image-inline:not([style*="width"]) img,
+.ck.ck-editor__editable .image.image-inline:not([style*="width"]) img,
+.ck.ck-editor__editable figure.image.image-inline:not([style*="width"]) img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* 리사이즈된 인라인 이미지 - 인라인 스타일 width 우선 적용 */
+.ck.ck-editor__editable .image-inline[style*="width"],
+.ck.ck-editor__editable .image.image-inline[style*="width"],
+.ck.ck-editor__editable figure.image.image-inline[style*="width"] {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin: 0 0.5em !important;
+  max-width: none !important;
+  min-width: 20px !important; /* 최소 크기 보장 */
+  /* width는 인라인 스타일이 자동으로 적용됨 */
+}
+
+.ck.ck-editor__editable .image-inline[style*="width"] img,
+.ck.ck-editor__editable .image.image-inline[style*="width"] img,
+.ck.ck-editor__editable figure.image.image-inline[style*="width"] img {
+  width: 100% !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  display: block !important;
+}
+
+/* 리사이즈 핸들 및 선택 상태 */
+.ck.ck-editor__editable .image-inline .ck-widget__resizer,
+.ck.ck-editor__editable .image.image-inline .ck-widget__resizer {
+  display: block !important;
+}
+
+.ck.ck-editor__editable .image-inline.ck-widget_selected,
+.ck.ck-editor__editable .image.image-inline.ck-widget_selected {
+  outline: 2px solid #0099ff !important;
+}
+
+/* 충돌하는 flex 속성 완전 제거 */
+.ck.ck-editor__editable .image-inline,
+.ck.ck-editor__editable .image.image-inline,
+.ck.ck-editor__editable figure.image.image-inline {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  flex-basis: auto !important;
+}
+
+.ck.ck-editor__editable .image-inline picture,
+.ck.ck-editor__editable .image-inline img {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  flex-basis: auto !important;
+  max-width: none !important;
+}
+
+/* CKEditor 기본 스타일 덮어쓰기 방지 */
+.ck.ck-editor__editable .image-inline {
+  contain: layout style !important;
 }
 
 /* 왼쪽 정렬 - 텍스트가 오른쪽으로 래핑 */
@@ -123,15 +190,263 @@
   margin-top: 1em;
 }
 
-/* 이미지 로딩 최적화 */
-.ck-content img {
+/* 이미지 로딩 최적화 - 인라인 이미지 제외 */
+.ck-content .image:not(.image-inline) img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* 에디터 프로필 이미지 최적화 */
+/* 인라인 이미지는 크기 제한 없음 */
+.ck-content .image-inline img,
+.ck-content .image.image-inline img,
+.ck-content figure.image.image-inline img {
+  max-width: none !important;
+  max-height: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* エディタープロフィール画像最適化 */
 .raw-html-embed img {
   object-fit: cover;
   flex-shrink: 0;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* プロフィールカードレスポンシブ対応 */
+.raw-html-embed {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+/* プロフィールカード内のテキスト要素 */
+.raw-html-embed * {
+  max-width: 100% !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+/* プロフィールカード内の円形画像制限 */
+.raw-html-embed img[style*="border-radius"] {
+  max-width: 80px !important;
+  max-height: 80px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* プレビューページでもインライン画像サイズ調整を反映 */
+.ck-content .image-inline,
+.ck-content .image.image-inline,
+.ck-content figure.image.image-inline {
+  display: inline !important;
+  vertical-align: middle !important;
+  margin: 0 0.25em !important;
+  max-width: 200px !important;
+}
+
+.ck-content .image-inline img,
+.ck-content .image.image-inline img,
+.ck-content figure.image.image-inline img {
+  display: inline !important;
+  vertical-align: middle !important;
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+/* エディターで設定されたwidthスタイルが適用されたインライン画像 */
+.ck-content .image-inline[style*="width"],
+.ck-content .image.image-inline[style*="width"],
+.ck-content figure.image.image-inline[style*="width"] {
+  display: inline !important;
+  vertical-align: middle !important;
+  margin: 0 0.25em !important;
+  max-width: 100% !important;
+}
+
+.ck-content .image-inline[style*="width"] img,
+.ck-content .image.image-inline[style*="width"] img,
+.ck-content figure.image.image-inline[style*="width"] img {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+
+/* pタグ内の画像はインラインとして処理 */
+.ck-content p img {
+  display: inline !important;
+  vertical-align: middle !important;
+  margin: 0 0.25em !important;
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+/* pタグ内でwidthスタイルがある画像 - 인라인 스타일 강제 오버라이드 */
+.ck-content p img[style*="width"] {
+  display: inline !important;
+  vertical-align: middle !important;
+  margin: 0 0.25em !important;
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+/* 基本画像はブロック保持（pタグ外の画像のみ） */
+.ck-content .image:not(.image-inline),
+.ck-content > img:not([style*="width"]) {
+  display: block;
+  margin: 1em auto;
+  width: auto;
+  height: auto;
+  max-width: 100% !important;
+  max-height: 80vh;
+}
+
+/* 全ての画像要素にレスポンシブ制御を適用 - 인라인 스타일 오버라이드 */
+.ck-content * img[style*="width"] {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+  display: inline !important;
+  vertical-align: middle !important;
+  margin: 0 0.25em !important;
+}
+
+.ck-content * img {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+  display: inline !important;
+  vertical-align: middle !important;
+  margin: 0 0.25em !important;
+}
+
+/* フィギュア要素内の画像 */
+.ck-content figure img {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* モバイルフレーム内での適切なインライン画像サイズ */
+.ck-content.mobile-frame img {
+  max-width: 150px !important;
+  max-height: 150px !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.mobile-frame p img {
+  max-width: 150px !important;
+  max-height: 150px !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.mobile-frame img.image_resized {
+  max-width: 150px !important;
+  max-height: 150px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* 実際のモバイルビュー（💻 PCボタン押下時）では大きなサイズ */
+.ck-content.mobile-view img {
+  max-width: 300px !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.mobile-view p img {
+  max-width: 300px !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.mobile-view img.image_resized {
+  max-width: 300px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+/* モバイルビューでブロック表示が必要한 경우 */
+.ck-content.mobile-view p img:only-child {
+  display: block !important;
+  margin: 1em auto !important;
+  max-width: 100% !important;
+  width: auto !important;
+}
+
+/* PCビュー（💻 PCボタン押下前の基本状態）でのインライン画像 - 最高優先度 */
+.ck-content.pc-view img[style*="width"] {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.pc-view p img[style*="width"] {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.pc-view img.image_resized[style*="width"] {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+.ck-content.pc-view img {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.pc-view p img {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 0.25em !important;
+  display: inline !important;
+  vertical-align: middle !important;
+}
+
+.ck-content.pc-view img.image_resized {
+  max-width: 200px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+/* PCビューで単独画像はブロック表示 */
+.ck-content.pc-view p img:only-child {
+  display: block !important;
+  margin: 1em auto !important;
+  max-width: 100% !important;
+  width: auto !important;
 }

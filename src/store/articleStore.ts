@@ -19,6 +19,8 @@ interface ArticleStore {
   isPublish: boolean;
   isMainPublish: boolean;
   thumbnail: string | null;
+  landscapeThumbnail: string | null;
+  portraitThumbnail: string | null;
   setIsSubmitDisabled: (disabled: boolean) => void;
   setArticleData: (data: string | ((prevData: string) => string)) => void;
   setPreviewContent: (content: string | null) => void;
@@ -30,6 +32,8 @@ interface ArticleStore {
   setIsPublish: (publish: boolean) => void;
   setIsMainPublish: (mainPublish: boolean) => void;
   setThumbnail: (image: string | null) => void;
+  setLandscapeThumbnail: (image: string | null) => void;
+  setPortraitThumbnail: (image: string | null) => void;
 }
 
 export const useArticleStore = create<ArticleStore>((set) => ({
@@ -52,6 +56,8 @@ export const useArticleStore = create<ArticleStore>((set) => ({
   isPublish: true,
   isMainPublish: false,
   thumbnail: null,
+  landscapeThumbnail: null,
+  portraitThumbnail: null,
   setIsSubmitDisabled: (disabled) => set({ isSubmitDisabled: disabled }),
   setArticleData: (data) =>
     set((state) => ({
@@ -67,4 +73,6 @@ export const useArticleStore = create<ArticleStore>((set) => ({
   setIsPublish: (publish) => set({ isPublish: publish }),
   setIsMainPublish: (mainPublish) => set({ isMainPublish: mainPublish }),
   setThumbnail: (image) => set({ thumbnail: image }),
+  setLandscapeThumbnail: (image) => set({ landscapeThumbnail: image }),
+  setPortraitThumbnail: (image) => set({ portraitThumbnail: image }),
 }));

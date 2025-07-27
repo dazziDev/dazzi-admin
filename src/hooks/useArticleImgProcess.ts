@@ -2,13 +2,13 @@
  * 에디터 콘텐츠에서 이미지를 추출하고, Base64 이미지를 File 객체로 변환합니다.
  * 또한 콘텐츠 내의 이미지 src를 플레이스홀더로 대체합니다.
  * @param content 에디터 콘텐츠 (HTML 문자열)
- * @param thumbnailUrl 썸네일 이미지의 URL (옵션)
+ * @param thumbnailUrls 썸네일 이미지들의 URL 배열 [가로형, 세로형] (옵션)
  * @param isEditMode 수정 모드 여부
  * @returns 수정된 콘텐츠와 이미지 파일 배열
  */
 export async function processArticleContent(
   content: string,
-  thumbnailUrl?: string,
+  thumbnailUrls?: string | string[],
   isEditMode = false
 ): Promise<{
   modifiedContent: string;
@@ -20,20 +20,38 @@ export async function processArticleContent(
   const imageFiles: File[] = [];
   let modifiedContent = content;
 
-  // 1. 썸네일 이미지 처리 (수정 모드에서는 S3 URL fetch 하지 않음)
-  if (thumbnailUrl && !isEditMode) {
-    try {
-      const thumbnailBlob = await fetch(thumbnailUrl).then((res) => res.blob());
-      const thumbnailFile = new File([thumbnailBlob], "image_0.jpg", {
-        type: "image/jpeg",
-      });
-      imageFiles.push(thumbnailFile);
-    } catch (error) {
-      console.warn("썸네일 이미지 fetch 실패:", error);
+  // 1. 듀얼 썸네일 이미지 처리 (수정 모드에서는 S3 URL fetch 하지 않음)
+  if (thumbnailUrls && !isEditMode) {
+    // 이전 버전 호환성을 위해 단일 문자열도 허용
+    const thumbnailArray = Array.isArray(thumbnailUrls)
+      ? thumbnailUrls
+      : [thumbnailUrls];
+
+    for (let i = 0; i < thumbnailArray.length; i++) {
+      const thumbnailUrl = thumbnailArray[i];
+      if (thumbnailUrl) {
+        try {
+          const thumbnailBlob = await fetch(thumbnailUrl).then((res) =>
+            res.blob()
+          );
+          const thumbnailFile = new File([thumbnailBlob], `image_${i}.jpg`, {
+            type: "image/jpeg",
+          });
+          imageFiles.push(thumbnailFile);
+        } catch (error) {
+          console.warn(`썸네일 ${i + 1} 이미지 fetch 실패:`, error);
+        }
+      }
     }
   }
 
-  // 2. 에디터 내 이미지 처리 (index를 1부터 시작)
+  // 2. 에디터 내 이미지 처리 (썸네일 다음 인덱스부터 시작)
+  const thumbnailCount = Array.isArray(thumbnailUrls)
+    ? thumbnailUrls.filter(Boolean).length
+    : thumbnailUrls
+    ? 1
+    : 0;
+
   for (let i = 0; i < imagesInContent.length; i++) {
     const imgTag = imagesInContent[i];
 
@@ -47,8 +65,11 @@ export async function processArticleContent(
       const res = await fetch(dataUrl);
       const blob = await res.blob();
 
-      // Blob을 File 객체로 변환 (이름을 image_1, image_2, ...으로 설정)
-      const file = new File([blob], `image_${i + 1}.png`, { type: blob.type });
+      // Blob을 File 객체로 변환 (썸네일 다음 인덱스부터 시작)
+      const fileIndex = thumbnailCount + i;
+      const file = new File([blob], `image_${fileIndex}.png`, {
+        type: blob.type,
+      });
       imageFiles.push(file);
 
       // 콘텐츠 내의 이미지 src를 플레이스홀더로 대체
@@ -59,7 +80,5 @@ export async function processArticleContent(
     }
   }
 
-  console.log("modifiedContent", modifiedContent);
-  console.log("imageFiles", imageFiles);
   return { modifiedContent, imageFiles };
 }

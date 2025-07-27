@@ -14,7 +14,7 @@ const nextConfig = {
     return [
       {
         source: '/api/v1/admin/:path*',
-        destination: `${process.env.BACKEND_API_URL || 'http://localhost:8080'}/api/v1/admin/:path*`,
+        destination: `${process.env.BACKEND_API_URL || 'http://localhost:4569'}/api/v1/admin/:path*`,
       },
     ];
   },

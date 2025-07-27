@@ -1,5 +1,9 @@
 "use client";
-import { fetchArticleDetail, saveArticleContent, updateArticleContent } from "@/app/api/article";
+import {
+  fetchArticleDetail,
+  saveArticleContent,
+  updateArticleContent,
+} from "@/app/api/article";
 import { articleConfig } from "@/config/articleConfig";
 import { processArticleContent } from "@/hooks/useArticleImgProcess";
 import { useArticleStore } from "@/store/articleStore";
@@ -30,7 +34,11 @@ interface CustomArticleProps {
   articleId?: string;
 }
 
-const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticleProps) => {
+const CustomArticle = ({
+  initialData,
+  mode = "create",
+  articleId,
+}: CustomArticleProps) => {
   const { data: session } = useSession();
   const articleRef = useRef<ClassicEditor | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -46,6 +54,8 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
     selectedCategories,
     isPublish,
     isMainPublish,
+    landscapeThumbnail,
+    portraitThumbnail,
     setTitle,
     setSubtitle,
     setPermalink,
@@ -54,6 +64,8 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
     setIsMainPublish,
     setSelectedEditor,
     setThumbnail,
+    setLandscapeThumbnail,
+    setPortraitThumbnail,
   } = useArticleStore();
 
   const router = useRouter();
@@ -71,88 +83,58 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
     setArticleData(data);
   };
 
-  // 에디터 선택 시 프로필 카드 추가 (무한 루프 방지 개선)
-  const lastEditorIdRef = useRef<string>("");
-  
-  useEffect(() => {
-    if (selectedEditor && selectedEditor.editorId && selectedEditor.editorId !== lastEditorIdRef.current) {
-      const profileCardHtml = `
-        <div class="raw-html-embed">
-          <div class="flex justify-center">
-            <div class="profile-card flex" style="width:80%; display:flex; align-items: center; padding: 10px; border: 1px solid #e0e0e0; border-radius: 12px; margin-top: 32px; background-color: #f9f9f9; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-              <img src="${selectedEditor.articleImage}" alt="name" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; border: 2px solid #007bff; loading: lazy;">
-              <div>
-                <strong style="font-size: 1.1rem; color: #333;">${selectedEditor.editorName}</strong>
-                <p style="margin: 5px 0 0; font-size: 0.9rem; color: #666;">${selectedEditor.description}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      setArticleData((prevData) => {
-        let newData = prevData;
-
-        // 기존 프로필 카드 제거 (중복 방지)
-        const profileCardRegex = /<div class="raw-html-embed">[\s\S]*?<\/div>/g;
-        newData = newData.replace(profileCardRegex, "");
-        
-        // 새 프로필 카드 추가
-        newData += profileCardHtml;
-
-        return newData;
-      });
-      
-      // 마지막 처리된 에디터 ID 기록
-      lastEditorIdRef.current = selectedEditor.editorId;
-      console.log("✅ 프로필 카드 추가:", selectedEditor.editorName);
-    }
-  }, [selectedEditor, setArticleData]);
+  // 프로필 카드 자동 삽입 기능 제거됨 - 시스템에서 자동 생성으로 변경
 
   // 편집 모드일 때 초기 데이터 로드
   useEffect(() => {
     if (mode === "edit" && initialData) {
       console.log("📝 편집 모드 - 초기 데이터 로드:", initialData);
-      
+
       setTitle(initialData.title || "");
       setSubtitle(initialData.subtitle || "");
       setPermalink(initialData.permalink || "");
       setIsPublish(initialData.isPublish || false);
       setIsMainPublish(initialData.isMainPublish || false);
-      
+
       // 기존 이미지 URL 파싱 및 썸네일 설정
       let parsedImageUrls: string[] = [];
       if (initialData.imageUrl) {
         try {
           // "[url1, url2, url3]" 형태의 문자열을 파싱
           let imageUrlString = initialData.imageUrl;
-          
+
           // 대괄호 제거
-          if (imageUrlString.startsWith('[') && imageUrlString.endsWith(']')) {
+          if (imageUrlString.startsWith("[") && imageUrlString.endsWith("]")) {
             imageUrlString = imageUrlString.slice(1, -1);
           }
-          
+
           // 쉼표로 분리하고 URL 정리
-          parsedImageUrls = imageUrlString.split(',').map((url: string) => 
-            url.trim().replace(/"/g, '').replace(/'/g, '')
-          ).filter((url: string) => url.length > 0);
-          
+          parsedImageUrls = imageUrlString
+            .split(",")
+            .map((url: string) =>
+              url.trim().replace(/"/g, "").replace(/'/g, "")
+            )
+            .filter((url: string) => url.length > 0);
+
           console.log("🖼️ 파싱된 이미지 URLs:", parsedImageUrls);
-          
+
           // 첫 번째 이미지를 썸네일로 설정
           if (parsedImageUrls.length > 0) {
             setThumbnail(parsedImageUrls[0]);
             console.log("🎨 썸네일 설정:", parsedImageUrls[0]);
           }
-          
         } catch (error) {
-          console.error("❌ 이미지 URL 파싱 실패:", error, initialData.imageUrl);
+          console.error(
+            "❌ 이미지 URL 파싱 실패:",
+            error,
+            initialData.imageUrl
+          );
         }
       }
-      
+
       // 기존 HTML 콘텐츠 설정 - 플레이스홀더를 실제 S3 URL로 복원
       let restoredContent = initialData.text || "";
-      
+
       // 플레이스홀더를 실제 이미지 URL로 교체 (썸네일은 제외하고 에디터 이미지만)
       if (parsedImageUrls.length > 1) {
         // 첫 번째는 썸네일이므로 두 번째부터 에디터 이미지
@@ -162,23 +144,31 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
         });
         console.log("🔄 플레이스홀더를 실제 URL로 복원 완료");
       }
-      
+
       setArticleData(restoredContent);
       console.log("📄 기사 콘텐츠 설정 완료");
-      
+
       // 카테고리 설정
       if (initialData.categoryId) {
         // categoryId로 해당 카테고리를 찾아서 permalink 사용
-        const selectedCategory = categoryList.find(cat => cat.categoryId === initialData.categoryId);
+        const selectedCategory = categoryList.find(
+          (cat) => cat.categoryId === initialData.categoryId
+        );
         if (selectedCategory) {
           setSelectedCategories([selectedCategory.permalink]);
-          console.log("📂 카테고리 설정:", selectedCategory.permalink, selectedCategory.categoryName);
+          console.log(
+            "📂 카테고리 설정:",
+            selectedCategory.permalink,
+            selectedCategory.categoryName
+          );
         }
       }
-      
+
       // 에디터 설정 (editorId가 있는 경우)
       if (initialData.editorId && editors.length > 0) {
-        const selectedEditor = editors.find(editor => editor.editorId === initialData.editorId);
+        const selectedEditor = editors.find(
+          (editor) => editor.editorId === initialData.editorId
+        );
         if (selectedEditor) {
           setSelectedEditor(selectedEditor);
           console.log("👤 에디터 설정:", selectedEditor.editorName);
@@ -196,16 +186,25 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
   }, [articleData]);
 
   // 썸네일 비율 검증 함수
-  const validateThumbnailAspectRatio = (thumbnailUrl: string, isMainPublish: boolean): Promise<boolean> => {
+  const validateThumbnailAspectRatio = (
+    thumbnailUrl: string,
+    isLandscape: boolean
+  ): Promise<boolean> => {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
         const aspectRatio = img.width / img.height;
-        const expectedRatio = isMainPublish ? 16/9 : 122/185;
+        const expectedRatio = isLandscape ? 16 / 9 : 3 / 4; // 가로형: 16:9, 세로형: 3:4
         const tolerance = 0.1; // 10% 허용 오차
-        
+
         const isValidRatio = Math.abs(aspectRatio - expectedRatio) <= tolerance;
-        console.log(`🖼️ 썸네일 비율 검증: ${img.width}x${img.height} (${aspectRatio.toFixed(2)}) vs 예상 비율 ${expectedRatio.toFixed(2)}`);
+        console.log(
+          `🖼️ 썸네일 비율 검증: ${img.width}x${
+            img.height
+          } (${aspectRatio.toFixed(2)}) vs 예상 비율 ${expectedRatio.toFixed(
+            2
+          )}`
+        );
         resolve(isValidRatio);
       };
       img.onerror = () => resolve(false);
@@ -236,16 +235,38 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
         alert("기사 작성자를 선택해주세요.");
       }
 
-      if (!thumbnail) {
-        alert("썸네일을 추가해주세요.");
+      // 듀얼 썸네일 검증
+      if (!landscapeThumbnail) {
+        alert("가로형 썸네일을 추가해주세요.");
         return;
       }
 
-      // 썸네일 비율 검증
-      const isValidAspectRatio = await validateThumbnailAspectRatio(thumbnail, isMainPublish);
-      if (!isValidAspectRatio) {
-        const expectedType = isMainPublish ? "메인 기사용 (16:9 가로 직사각형)" : "보통 기사용 (122:185 세로형)";
-        alert(`썸네일 비율이 올바르지 않습니다.\n현재 메인공개 설정에 맞는 ${expectedType} 비율로 다시 자르기해주세요.`);
+      if (!portraitThumbnail) {
+        alert("세로형 썸네일을 추가해주세요.");
+        return;
+      }
+
+      // 듀얼 썸네일 비율 검증
+      const isValidLandscape = await validateThumbnailAspectRatio(
+        landscapeThumbnail,
+        true
+      ); // 가로형은 16:9
+      const isValidPortrait = await validateThumbnailAspectRatio(
+        portraitThumbnail,
+        false
+      ); // 세로형은 3:4
+
+      if (!isValidLandscape) {
+        alert(
+          "가로형 썸네일 비율이 올바르지 않습니다.\n16:9 비율로 다시 자르기해주세요."
+        );
+        return;
+      }
+
+      if (!isValidPortrait) {
+        alert(
+          "세로형 썸네일 비율이 올바르지 않습니다.\n3:4 비율로 다시 자르기해주세요."
+        );
         return;
       }
 
@@ -262,23 +283,25 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
       // 1. 에디터 콘텐츠 가져오기
       const content: string = articleData;
 
-      // 2. 콘텐츠에서 이미지 처리
-      // 썸네일 이미지를 맨 앞에 추가
+      // 2. 콘텐츠에서 이미지 처리 - 듀얼 썸네일 사용
+      // 가로형, 세로형 썸네일 순서로 배열 전달
+      const thumbnails = [landscapeThumbnail, portraitThumbnail];
       const { modifiedContent, imageFiles } = await processArticleContent(
         content,
-        thumbnail,
+        thumbnails, // 듀얼 썸네일 배열 전달
         mode === "edit" // 수정 모드인지 전달
       );
 
       // 3. FormData 생성 및 데이터 추가
       const formData = new FormData();
-      const currentEditorName = session?.user?.name || selectedEditor.editorName;
+      const currentEditorName =
+        session?.user?.name || selectedEditor.editorName;
       console.log("📝 FormData에 설정할 editorName:", {
         sessionUserName: session?.user?.name,
         selectedEditorName: selectedEditor.editorName,
-        finalEditorName: currentEditorName
+        finalEditorName: currentEditorName,
       });
-      
+
       formData.append("editorId", selectedEditor.editorId);
       formData.append("editorName", currentEditorName);
       formData.append("categoryId", selectedCategory.categoryId.toString());
@@ -316,13 +339,21 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
       let response;
       if (mode === "edit" && articleId) {
         // 편집 모드: 새로운 이미지만 전송 (썸네일이 S3 URL인 경우 제외)
-        const isExistingThumbnail = thumbnail && (thumbnail.includes('amazonaws.com') || thumbnail.includes('s3'));
-        
+        const isExistingThumbnail =
+          thumbnail &&
+          (thumbnail.includes("amazonaws.com") || thumbnail.includes("s3"));
+
         // 새로운 FormData 생성 (기존 이미지 제외)
         const editFormData = new FormData();
         editFormData.append("editorId", selectedEditor.editorId);
-        editFormData.append("editorName", session?.user?.name || selectedEditor.editorName);
-        editFormData.append("categoryId", selectedCategory.categoryId.toString());
+        editFormData.append(
+          "editorName",
+          session?.user?.name || selectedEditor.editorName
+        );
+        editFormData.append(
+          "categoryId",
+          selectedCategory.categoryId.toString()
+        );
         editFormData.append("title", title);
         editFormData.append("subtitle", subtitle);
         editFormData.append("text", modifiedContent);
@@ -333,25 +364,36 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
           editFormData.append("publishTime", publishTime);
         }
 
-        // 새로운 이미지만 추가 (썸네일이 기존 S3 이미지가 아닌 경우만)
-        if (!isExistingThumbnail && imageFiles.length > 0) {
-          imageFiles.forEach((file) => {
-            editFormData.append("files", file);
-          });
-        } else if (isExistingThumbnail && imageFiles.length > 1) {
-          // 기존 썸네일 + 새로운 에디터 이미지들
-          imageFiles.slice(1).forEach((file) => {
+        // 듀얼 썸네일 처리
+        const isExistingLandscape =
+          landscapeThumbnail &&
+          (landscapeThumbnail.includes("amazonaws.com") ||
+            landscapeThumbnail.includes("s3"));
+        const isExistingPortrait =
+          portraitThumbnail &&
+          (portraitThumbnail.includes("amazonaws.com") ||
+            portraitThumbnail.includes("s3"));
+
+        // 새로운 이미지만 추가
+        if (imageFiles.length > 0) {
+          // 기존 이미지가 아닌 경우만 추가
+          let startIndex = 0;
+          if (isExistingLandscape) startIndex++; // 가로형이 기존 이미지면 1개 건너뜨
+          if (isExistingPortrait) startIndex++; // 세로형도 기존 이미지면 1개 더 건너뜨
+
+          imageFiles.slice(startIndex).forEach((file) => {
             editFormData.append("files", file);
           });
         }
-        
+
         console.log("📤 편집 모드로 데이터 전송:", {
           articleId,
           hasNewImages: editFormData.getAll("files").length,
           contentLength: modifiedContent.length,
-          isExistingThumbnail
+          isExistingLandscape,
+          isExistingPortrait,
         });
-        
+
         response = await updateArticleContent(articleId, editFormData);
         if (response) {
           alert("기사가 성공적으로 수정되었습니다.");
@@ -411,23 +453,24 @@ const CustomArticle = ({ initialData, mode = "create", articleId }: CustomArticl
             variant="outline"
             onClick={() => setIsPreviewOpen(true)}
             disabled={!title && !articleData}
-            title={!title && !articleData ? "제목이나 내용을 입력한 후 미리보기를 확인하세요" : ""}
+            title={
+              !title && !articleData
+                ? "제목이나 내용을 입력한 후 미리보기를 확인하세요"
+                : ""
+            }
           >
             👁️ 미리보기
           </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitDisabled}
-          >
+          <Button onClick={handleSubmit} disabled={isSubmitDisabled}>
             {mode === "edit" ? "기사 수정" : "기사 등록"}
           </Button>
         </div>
       </div>
-      
+
       {/* 미리보기 모달 */}
-      <ArticlePreviewModal 
-        isOpen={isPreviewOpen} 
-        onClose={() => setIsPreviewOpen(false)} 
+      <ArticlePreviewModal
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
       />
     </div>
   );
