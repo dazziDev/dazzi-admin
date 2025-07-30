@@ -6,6 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ProfileImageCrop from "./ProfileImageCrop";
+import { generateEnglishFilename } from "@/lib/fileUtils";
 
 interface EditorFormProps {
   initialEditor?: Editor;
@@ -125,7 +126,7 @@ const EditorForm = ({ initialEditor, onClose }: EditorFormProps) => {
         }
 
         if (blob) {
-          const file = new File([blob], "articleImage.png", {
+          const file = new File([blob], generateEnglishFilename('.png'), {
             type: "image/png",
           });
           imageFiles.push(file);
@@ -157,7 +158,7 @@ const EditorForm = ({ initialEditor, onClose }: EditorFormProps) => {
         }
 
         if (blob) {
-          const file = new File([blob], "introduceImage.png", {
+          const file = new File([blob], generateEnglishFilename('.png'), {
             type: "image/png",
           });
           imageFiles.push(file);

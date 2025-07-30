@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { convertFileToEnglishName } from "@/lib/fileUtils";
 import { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 
@@ -13,7 +14,9 @@ const AvatarUpload = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
+      // 파일명을 영어로 변환
+      const convertedFile = convertFileToEnglishName(e.target.files[0]);
+      setImage(convertedFile);
     }
   };
 

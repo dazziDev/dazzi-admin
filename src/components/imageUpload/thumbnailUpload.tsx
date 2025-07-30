@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { convertFileToEnglishName } from "@/lib/fileUtils";
 import { useArticleStore } from "@/store/articleStore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -102,6 +103,8 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = () => {
 
     const file = acceptedFiles[0];
     if (file) {
+      // 파일명을 영어로 변환
+      const convertedFile = convertFileToEnglishName(file);
       const reader = new FileReader();
       reader.onload = () => {
         const imageUrl = reader.result as string;
@@ -111,7 +114,7 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = () => {
         setCompletedCrop(undefined);
         setError(null);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(convertedFile);
     }
   }, []);
 
@@ -391,7 +394,11 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = () => {
               onChange={(e) => {
                 const files = e.target.files;
                 if (files) {
-                  onDrop(Array.from(files), []);
+                  // 파일명을 영어로 변환
+                  const convertedFiles = Array.from(files).map(file => 
+                    convertFileToEnglishName(file)
+                  );
+                  onDrop(convertedFiles, []);
                 }
               }}
               ref={fileInputRef}
