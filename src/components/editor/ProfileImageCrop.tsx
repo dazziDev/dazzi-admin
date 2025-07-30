@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import React, { useRef, useState } from "react";
 import ReactCrop, {
   Crop,
@@ -59,7 +58,7 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
       height
     );
     setCrop(newCrop);
-    
+
     // 즉시 completedCrop도 설정하여 함수 준비
     const pixelCrop = convertToPixelCrop(newCrop, width, height);
     setCompletedCrop(pixelCrop);
@@ -67,25 +66,25 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
 
   // 미리보기 업데이트 함수
   const updatePreview = React.useCallback(async () => {
-    console.log('updatePreview 시작:', {
+    console.log("updatePreview 시작:", {
       hasImg: !!imgRef.current,
       hasCompletedCrop: !!completedCrop,
       hasCanvas: !!previewCanvasRef.current,
       completedCrop,
       scale,
-      rotate
+      rotate,
     });
 
     if (!imgRef.current || !completedCrop || !previewCanvasRef.current) {
-      console.log('updatePreview: 필수 요소 누락');
+      console.log("updatePreview: 필수 요소 누락");
       return;
     }
 
     try {
       // 임시 캔버스로 크롭 미리보기 생성
-      const tempCanvas = document.createElement('canvas');
-      console.log('updatePreview: canvasPreview 호출 전');
-      
+      const tempCanvas = document.createElement("canvas");
+      console.log("updatePreview: canvasPreview 호출 전");
+
       await canvasPreview(
         imgRef.current,
         tempCanvas,
@@ -93,27 +92,37 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
         scale,
         rotate
       );
-      
-      console.log('updatePreview: canvasPreview 완료, tempCanvas 크기:', tempCanvas.width, 'x', tempCanvas.height);
+
+      console.log(
+        "updatePreview: canvasPreview 완료, tempCanvas 크기:",
+        tempCanvas.width,
+        "x",
+        tempCanvas.height
+      );
 
       // 최종 캔버스에 결과 적용
       const canvas = previewCanvasRef.current;
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        console.log('updatePreview: canvas context 없음');
+        console.log("updatePreview: canvas context 없음");
         return;
       }
 
       canvas.width = cropSize.width;
       canvas.height = cropSize.height;
-      console.log('updatePreview: 최종 canvas 크기 설정:', cropSize.width, 'x', cropSize.height);
+      console.log(
+        "updatePreview: 최종 canvas 크기 설정:",
+        cropSize.width,
+        "x",
+        cropSize.height
+      );
 
       ctx.save();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (isCircle) {
         // 원형 마스크 적용
-        console.log('updatePreview: 원형 마스크 적용');
+        console.log("updatePreview: 원형 마스크 적용");
         ctx.beginPath();
         ctx.arc(
           canvas.width / 2,
@@ -126,17 +135,24 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
       }
 
       // 임시 캔버스를 최종 크기로 조정하여 그리기
-      console.log('updatePreview: 최종 이미지 그리기');
+      console.log("updatePreview: 최종 이미지 그리기");
       ctx.drawImage(
         tempCanvas,
-        0, 0, tempCanvas.width, tempCanvas.height,
-        0, 0, canvas.width, canvas.height
+        0,
+        0,
+        tempCanvas.width,
+        tempCanvas.height,
+        0,
+        0,
+        canvas.width,
+        canvas.height
       );
 
       ctx.restore();
-      console.log('updatePreview: 미리보기 업데이트 완료');
+      onCropReady(getCroppedBlob);
+      console.log("updatePreview: 미리보기 업데이트 완료");
     } catch (error) {
-      console.error('미리보기 업데이트 오류:', error);
+      console.error("미리보기 업데이트 오류:", error);
     }
   }, [completedCrop, cropSize, isCircle, rotate, scale]);
 
@@ -148,37 +164,40 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
   // 크롭된 이미지를 반환하는 함수
   const getCroppedBlob = React.useCallback(async (): Promise<Blob | null> => {
     if (!previewCanvasRef.current) {
-      console.log('getCroppedBlob: canvas가 없음');
+      console.log("getCroppedBlob: canvas가 없음");
       return null;
     }
 
     const canvas = previewCanvasRef.current;
-    console.log('getCroppedBlob: canvas 크기:', canvas.width, 'x', canvas.height);
-    
+    console.log(
+      "getCroppedBlob: canvas 크기:",
+      canvas.width,
+      "x",
+      canvas.height
+    );
+
     // canvas 내용 확인
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (ctx) {
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const hasContent = imageData.data.some(pixel => pixel !== 0);
-      console.log('getCroppedBlob: canvas에 내용이 있는가?', hasContent);
+      const hasContent = imageData.data.some((pixel) => pixel !== 0);
+      console.log("getCroppedBlob: canvas에 내용이 있는가?", hasContent);
     }
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => {
-        console.log('getCroppedBlob: blob 생성 결과:', blob, '크기:', blob?.size);
+        console.log(
+          "getCroppedBlob: blob 생성 결과:",
+          blob,
+          "크기:",
+          blob?.size
+        );
         resolve(blob);
       }, "image/png");
     });
   }, []);
 
   // 크롭 준비 완료를 부모에게 알림
-  React.useEffect(() => {
-    if (completedCrop) {
-      console.log(`${isCircle ? '원형' : '직사각형'} 크롭 준비 완료:`, completedCrop);
-      console.log('함수 전달 시 타입:', typeof getCroppedBlob);
-      onCropReady(getCroppedBlob);
-    }
-  }, [completedCrop, getCroppedBlob, onCropReady, isCircle]);
 
   if (!src) return null;
 
@@ -201,7 +220,7 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
             className="max-h-96"
             style={{
               transform: `scale(${scale}) rotate(${rotate}deg)`,
-              transformOrigin: 'center',
+              transformOrigin: "center",
             }}
           />
         </ReactCrop>
@@ -247,7 +266,9 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
           <p className="text-sm font-medium text-gray-700 mb-2">미리보기</p>
           <canvas
             ref={previewCanvasRef}
-            className={`border-2 border-gray-300 shadow-sm ${isCircle ? "rounded-full" : "rounded-lg"}`}
+            className={`border-2 border-gray-300 shadow-sm ${
+              isCircle ? "rounded-full" : "rounded-lg"
+            }`}
             style={{
               width: isCircle ? 120 : 160,
               height: isCircle ? 120 : 90,
@@ -257,10 +278,9 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
         </div>
       </div>
 
-
       <p className="text-xs text-gray-500 text-center">
-        {isCircle 
-          ? "원형 영역 안의 이미지가 프로필 사진으로 사용됩니다" 
+        {isCircle
+          ? "원형 영역 안의 이미지가 프로필 사진으로 사용됩니다"
           : "선택한 영역이 에디터 소개 이미지로 사용됩니다"}
       </p>
     </div>
