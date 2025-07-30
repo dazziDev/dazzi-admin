@@ -147,10 +147,6 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
         canvas.width,
         canvas.height
       );
-
-      ctx.restore();
-      onCropReady(getCroppedBlob);
-      console.log("updatePreview: 미리보기 업데이트 완료");
     } catch (error) {
       console.error("미리보기 업데이트 오류:", error);
     }
@@ -196,6 +192,16 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
       }, "image/png");
     });
   }, []);
+
+  const firstRun = React.useRef(true);
+  React.useEffect(() => {
+    if (!completedCrop) return;
+    if (firstRun.current) {
+      // 최초 1회만
+      onCropReady(getCroppedBlob);
+      firstRun.current = false;
+    }
+  }, [completedCrop, getCroppedBlob, onCropReady]);
 
   // 크롭 준비 완료를 부모에게 알림
 
