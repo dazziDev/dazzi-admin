@@ -1,4 +1,4 @@
-import { generateEnglishFilename, getFileExtension } from '@/lib/fileUtils';
+import { generateEnglishFilename } from "@/lib/fileUtils";
 
 /**
  * 에디터 콘텐츠에서 이미지를 추출하고, Base64 이미지를 File 객체로 변환합니다.
@@ -36,7 +36,7 @@ export async function processArticleContent(
           const thumbnailBlob = await fetch(thumbnailUrl).then((res) =>
             res.blob()
           );
-          const englishFilename = generateEnglishFilename('.jpg');
+          const englishFilename = generateEnglishFilename(".jpg");
           const thumbnailFile = new File([thumbnailBlob], englishFilename, {
             type: "image/jpeg",
           });
@@ -69,9 +69,9 @@ export async function processArticleContent(
       const blob = await res.blob();
 
       // 확장자 추출 (blob.type에서)
-      const extension = blob.type === 'image/png' ? '.png' : '.jpg';
+      const extension = blob.type === "image/png" ? ".png" : ".jpg";
       const englishFilename = generateEnglishFilename(extension);
-      
+
       // Blob을 File 객체로 변환 (영어 파일명 사용)
       const file = new File([blob], englishFilename, {
         type: blob.type,
@@ -81,7 +81,7 @@ export async function processArticleContent(
       // 콘텐츠 내의 이미지 src를 플레이스홀더로 대체
       modifiedContent = modifiedContent.replace(
         dataUrl,
-        `__IMAGE_PLACEHOLDER_${i + 1}__`
+        `__IMAGE_PLACEHOLDER_${i}__`
       );
     }
   }
