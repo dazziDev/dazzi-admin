@@ -139,7 +139,7 @@ const CustomArticle = ({
       if (parsedImageUrls.length > 2) {
         // 첫 번째는 썸네일이므로 두 번째부터 에디터 이미지
         parsedImageUrls.slice(2).forEach((url, index) => {
-          const placeholder = `__IMAGE_PLACEHOLDER_${index + 1}__`;
+          const placeholder = `__IMAGE_PLACEHOLDER_${index}__`;
           restoredContent = restoredContent.replaceAll(placeholder, url);
         });
         console.log("🔄 플레이스홀더를 실제 URL로 복원 완료");
