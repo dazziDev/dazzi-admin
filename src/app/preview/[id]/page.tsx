@@ -20,6 +20,8 @@ interface ArticleDetail {
   isPublish: boolean;
   isMainPublish: boolean;
   imageUrl: string;
+  landscapeImageUrl?: string;
+  portraitImageUrl?: string;
   updateAt: string;
   createAt: string;
 }
@@ -102,10 +104,25 @@ const PreviewPage = () => {
             )
             .filter((url: string) => url.length > 0);
 
-          // 플레이스홀더를 실제 이미지 URL로 교체 (썸네일은 제외하고 에디터 이미지만)
+          // 플레이스홀더를 실제 이미지 URL로 교체
           if (imageUrls.length > 0) {
-            // 첫 번째는 썸네일이므로 인덱스 1부터 시작
-            imageUrls.slice(1).forEach((url: string, index: number) => {
+            // 듀얼 썸네일 시스템 확인 (3개 이상의 URL이 있고, 첫 두 개가 썸네일인 경우)
+            let startIndex = 0;
+            
+            // landscapeImageUrl과 portraitImageUrl이 있는지 확인
+            const hasLandscapeThumbnail = articleData.landscapeImageUrl && articleData.landscapeImageUrl.trim() !== '';
+            const hasPortraitThumbnail = articleData.portraitImageUrl && articleData.portraitImageUrl.trim() !== '';
+            
+            if (hasLandscapeThumbnail && hasPortraitThumbnail) {
+              // 듀얼 썸네일이 있는 경우: 첫 2개는 썸네일
+              startIndex = 2;
+            } else if (hasLandscapeThumbnail || hasPortraitThumbnail || articleData.imageUrl) {
+              // 단일 썸네일만 있는 경우
+              startIndex = 1;
+            }
+            
+            // 에디터 내 이미지들 처리
+            imageUrls.slice(startIndex).forEach((url: string, index: number) => {
               const placeholder = `__IMAGE_PLACEHOLDER_${index + 1}__`;
               restoredContent = restoredContent.replace(new RegExp(placeholder, 'g'), url);
             });
@@ -188,6 +205,48 @@ const PreviewPage = () => {
       </div>
 
       <div className="border-b-2 border-gray-200 mb-6"></div>
+
+      {/* 썸네일 표시 */}
+      {articleDetail && (articleDetail.landscapeImageUrl || articleDetail.portraitImageUrl || articleDetail.imageUrl) && (
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-3">썸네일 미리보기</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {/* 가로형 썸네일 */}
+            <div>
+              <p className="text-sm text-gray-600 mb-2">🖼️ 가로형 (PC용)</p>
+              {articleDetail.landscapeImageUrl ? (
+                <img 
+                  src={articleDetail.landscapeImageUrl} 
+                  alt="가로형 썸네일" 
+                  className="w-full rounded-lg border"
+                  style={{ aspectRatio: '16/9', objectFit: 'cover' }}
+                />
+              ) : (
+                <div className="w-full bg-gray-200 rounded-lg flex items-center justify-center" style={{ aspectRatio: '16/9' }}>
+                  <span className="text-gray-400">썸네일 없음</span>
+                </div>
+              )}
+            </div>
+            
+            {/* 세로형 썸네일 */}
+            <div>
+              <p className="text-sm text-gray-600 mb-2">📱 세로형 (모바일용)</p>
+              {articleDetail.portraitImageUrl ? (
+                <img 
+                  src={articleDetail.portraitImageUrl} 
+                  alt="세로형 썸네일" 
+                  className="w-full rounded-lg border"
+                  style={{ aspectRatio: '3/4', objectFit: 'cover', maxHeight: '300px' }}
+                />
+              ) : (
+                <div className="w-full bg-gray-200 rounded-lg flex items-center justify-center" style={{ aspectRatio: '3/4', maxHeight: '300px' }}>
+                  <span className="text-gray-400">썸네일 없음</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {!isMobileView ? (
         <div className="flex justify-center">
