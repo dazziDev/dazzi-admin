@@ -103,7 +103,8 @@ const PreviewPage = () => {
             .filter((url: string) => url.length > 0);
 
           // 플레이스홀더를 실제 이미지 URL로 교체 (썸네일은 제외하고 에디터 이미지만)
-          if (imageUrls.length > 1) {
+          if (imageUrls.length > 0) {
+            // 첫 번째는 썸네일이므로 인덱스 1부터 시작
             imageUrls.slice(1).forEach((url: string, index: number) => {
               const placeholder = `__IMAGE_PLACEHOLDER_${index + 1}__`;
               restoredContent = restoredContent.replace(placeholder, url);
