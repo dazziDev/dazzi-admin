@@ -107,7 +107,7 @@ const PreviewPage = () => {
             // 첫 번째는 썸네일이므로 인덱스 1부터 시작
             imageUrls.slice(1).forEach((url: string, index: number) => {
               const placeholder = `__IMAGE_PLACEHOLDER_${index + 1}__`;
-              restoredContent = restoredContent.replace(placeholder, url);
+              restoredContent = restoredContent.replace(new RegExp(placeholder, 'g'), url);
             });
           }
 
