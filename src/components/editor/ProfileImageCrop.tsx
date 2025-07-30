@@ -63,6 +63,11 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
     const pixelCrop = convertToPixelCrop(newCrop, width, height);
     setCompletedCrop(pixelCrop);
   }
+  const calledRef = useRef(false);
+
+  React.useEffect(() => {
+    calledRef.current = false;
+  }, [completedCrop]);
 
   // 미리보기 업데이트 함수
   const updatePreview = React.useCallback(async () => {
@@ -147,6 +152,10 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
         canvas.width,
         canvas.height
       );
+      if (!calledRef.current) {
+        onCropReady(getCroppedBlob); // 실제 픽셀 그려진 뒤 Blob 전달
+        calledRef.current = true;
+      }
     } catch (error) {
       console.error("미리보기 업데이트 오류:", error);
     }
@@ -192,16 +201,6 @@ const ProfileImageCrop: React.FC<ProfileImageCropProps> = ({
       }, "image/png");
     });
   }, []);
-
-  const firstRun = React.useRef(true);
-  React.useEffect(() => {
-    if (!completedCrop) return;
-    if (firstRun.current) {
-      // 최초 1회만
-      onCropReady(getCroppedBlob);
-      firstRun.current = false;
-    }
-  }, [completedCrop, getCroppedBlob, onCropReady]);
 
   // 크롭 준비 완료를 부모에게 알림
 

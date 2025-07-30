@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { generateEnglishFilename } from "@/lib/fileUtils";
 import { Editor, useEditorStore } from "@/store/editorStore";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import ProfileImageCrop from "./ProfileImageCrop";
-import { generateEnglishFilename } from "@/lib/fileUtils";
 
 interface EditorFormProps {
   initialEditor?: Editor;
@@ -42,15 +42,14 @@ const EditorForm = ({ initialEditor, onClose }: EditorFormProps) => {
 
   const [avatar, setAvatar] = useState<File | null>(null);
   const [rectAvatar, setRectAvatar] = useState<File | null>(null);
-  const [getAvatarBlob, setGetAvatarBlob] = useState<
-    (() => Promise<Blob | null>) | Promise<Blob | null> | null
-  >(null);
-  const [getRectAvatarBlob, setGetRectAvatarBlob] = useState<
-    (() => Promise<Blob | null>) | Promise<Blob | null> | null
-  >(null);
 
-  // 디버깅: 함수 상태 확인
-  useEffect(() => {}, [getAvatarBlob, getRectAvatarBlob]);
+  // ----- 상단에 추가 -----
+  const avatarBlobRef = useRef<
+    (() => Promise<Blob | null>) | Promise<Blob | null> | null
+  >(null);
+  const rectBlobRef = useRef<
+    (() => Promise<Blob | null>) | Promise<Blob | null> | null
+  >(null);
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -110,66 +109,35 @@ const EditorForm = ({ initialEditor, onClose }: EditorFormProps) => {
 
     const imageFiles: File[] = [];
 
-    if (getAvatarBlob) {
-      console.log("원형 이미지 blob 생성 시도...");
-      try {
-        let blob = null;
-        // Promise인지 함수인지 확인
-        if (typeof getAvatarBlob === "function") {
-          const result = getAvatarBlob();
-
-          blob = await result;
-        } else if (getAvatarBlob && typeof getAvatarBlob.then === "function") {
-          blob = await getAvatarBlob;
-        } else {
-          throw new Error("getAvatarBlob is neither function nor Promise");
-        }
-
-        if (blob) {
-          const file = new File([blob], generateEnglishFilename('.png'), {
+    if (avatarBlobRef.current) {
+      const blob =
+        typeof avatarBlobRef.current === "function"
+          ? await avatarBlobRef.current()
+          : await avatarBlobRef.current;
+      if (blob) {
+        imageFiles.push(
+          new File([blob], generateEnglishFilename(".png"), {
             type: "image/png",
-          });
-          imageFiles.push(file);
-        } else {
-        }
-      } catch (error) {
-        console.error("원형 이미지 blob 생성 중 오류:", error);
+          })
+        );
       }
-    } else {
     }
 
     // 소개용 이미지(사각형) 처리
 
-    if (getRectAvatarBlob) {
-      try {
-        let blob = null;
-        // Promise인지 함수인지 확인
-        if (typeof getRectAvatarBlob === "function") {
-          const result = getRectAvatarBlob();
-
-          blob = await result;
-        } else if (
-          getRectAvatarBlob &&
-          typeof getRectAvatarBlob.then === "function"
-        ) {
-          blob = await getRectAvatarBlob;
-        } else {
-          throw new Error("getRectAvatarBlob is neither function nor Promise");
-        }
-
-        if (blob) {
-          const file = new File([blob], generateEnglishFilename('.png'), {
+    if (rectBlobRef.current) {
+      const blob =
+        typeof rectBlobRef.current === "function"
+          ? await rectBlobRef.current()
+          : await rectBlobRef.current;
+      if (blob) {
+        imageFiles.push(
+          new File([blob], generateEnglishFilename(".png"), {
             type: "image/png",
-          });
-          imageFiles.push(file);
-        } else {
-        }
-      } catch (error) {
-        console.error("직사각형 이미지 blob 생성 중 오류:", error);
+          })
+        );
       }
-    } else {
     }
-
     // 이미지 파일을 FormData에 추가
     imageFiles.forEach((file) => {
       formData.append("files", file);
@@ -266,7 +234,9 @@ const EditorForm = ({ initialEditor, onClose }: EditorFormProps) => {
                 <ProfileImageCrop
                   imageFile={avatar}
                   isCircle={true}
-                  onCropReady={setGetAvatarBlob}
+                  onCropReady={(fn) => {
+                    avatarBlobRef.current = fn;
+                  }}
                   aspectRatio={1}
                   cropSize={{ width: 200, height: 200 }}
                 />
@@ -305,7 +275,9 @@ const EditorForm = ({ initialEditor, onClose }: EditorFormProps) => {
                 <ProfileImageCrop
                   imageFile={rectAvatar}
                   isCircle={false}
-                  onCropReady={setGetRectAvatarBlob}
+                  onCropReady={(fn) => {
+                    rectBlobRef.current = fn;
+                  }} // ref 저장
                   aspectRatio={372 / 213}
                   cropSize={{ width: 372, height: 213 }}
                 />
