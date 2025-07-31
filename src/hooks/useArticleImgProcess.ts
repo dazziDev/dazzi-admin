@@ -79,10 +79,12 @@ export async function processArticleContent(
       imageFiles.push(file);
 
       // 콘텐츠 내의 이미지 src를 플레이스홀더로 대체
+      const placeholderIndex = i; // 本文画像のインデックスは0から
       modifiedContent = modifiedContent.replace(
         dataUrl,
-        `__IMAGE_PLACEHOLDER_${i}__`
+        `__IMAGE_PLACEHOLDER_${placeholderIndex}__`
       );
+      console.log(`🏷️ 本文画像 ${placeholderIndex}: ${englishFilename}`);
     }
   }
 

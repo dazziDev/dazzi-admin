@@ -123,7 +123,7 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = () => {
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".gif"],
     },
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 20 * 1024 * 1024, // 20MB
     multiple: false,
   });
 

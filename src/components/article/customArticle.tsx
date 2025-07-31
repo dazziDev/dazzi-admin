@@ -138,9 +138,18 @@ const CustomArticle = ({
       // 플레이스홀더를 실제 이미지 URL로 교체 (썸네일은 제외하고 에디터 이미지만)
       if (parsedImageUrls.length > 2) {
         // 첫 번째는 썸네일이므로 두 번째부터 에디터 이미지
-        parsedImageUrls.slice(2).forEach((url, index) => {
+        const contentImages = parsedImageUrls.slice(2);
+        console.log(`📊 本文画像数: ${contentImages.length}`);
+        
+        contentImages.forEach((url, index) => {
           const placeholder = `__IMAGE_PLACEHOLDER_${index}__`;
-          restoredContent = restoredContent.replaceAll(placeholder, url);
+          // プレースホルダーが存在するかチェック
+          if (restoredContent.includes(placeholder)) {
+            restoredContent = restoredContent.replaceAll(placeholder, url);
+            console.log(`✅ ${placeholder} → ${url}`);
+          } else {
+            console.warn(`⚠️ プレースホルダー ${placeholder} が見つかりません`);
+          }
         });
         console.log("🔄 플레이스홀더를 실제 URL로 복원 완료");
       }
